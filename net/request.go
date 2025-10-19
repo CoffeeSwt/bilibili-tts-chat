@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	. "github.com/CoffeeSwt/bilibili-tts-chat/config"
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 
 	"github.com/monaco-io/request"
 )
@@ -90,7 +90,7 @@ func ApiRequest(reqJson, requestUrl string) (resp BaseResp, err error) {
 	header.Authorization = CreateSignature(header, GetAccessKeySecret())
 	cli := request.Client{
 		Method: "POST",
-		URL:    fmt.Sprintf("%s%s", OpenPlatformHttpHost, requestUrl),
+		URL:    fmt.Sprintf("%s%s", config.OpenPlatformHttpHost, requestUrl),
 		Header: header.ToMap(),
 		String: reqJson,
 	}
