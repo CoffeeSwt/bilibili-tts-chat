@@ -2,12 +2,13 @@ package voice_engine
 
 import (
 	"fmt"
-	"github.com/CoffeeSwt/bilibili-tts-chat/response"
-	user_voice "github.com/CoffeeSwt/bilibili-tts-chat/user"
 	"log"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/CoffeeSwt/bilibili-tts-chat/response"
+	user_voice "github.com/CoffeeSwt/bilibili-tts-chat/user"
 )
 
 func PlaySuperChatVoice(msg response.SuperChatData) {
@@ -51,8 +52,7 @@ func getThankText(username string, amount int) string {
 }
 
 // getRandomBlessingPrefix 根据金额获取随机祝福语开场白（33%概率）
-func getRandomBlessingPrefix(amount int) string {
-
+func getRandomBlessingPrefix() string {
 	return blessingPrefixes[rand.Intn(len(blessingPrefixes))]
 }
 
@@ -80,7 +80,7 @@ func getSuperChatText(msg response.SuperChatData) string {
 	thankText := getThankText(msg.UName, msg.RMB)
 
 	// 获取随机祝福语
-	blessingPrefix := getRandomBlessingPrefix(msg.RMB)
+	blessingPrefix := getRandomBlessingPrefix()
 
 	// 处理留言内容
 	formattedMessage := formatMessage(msg.Message)

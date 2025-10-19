@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"net"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 
 	"github.com/golang/glog"
 	"github.com/google/uuid"
@@ -273,7 +274,7 @@ func (c *WebSocketTTSClient) sendTTSRequestWithRetry(req TTSRequest, retryCount 
 	}
 
 	// 发送请求
-	if err := FullClientRequest(c.conn, payload); err != nil {
+	if err = FullClientRequest(c.conn, payload); err != nil {
 		if isConnectionError(err) && retryCount < maxRetries {
 			// 智能指数退避策略：基础延迟 + 随机抖动
 			baseDelay := time.Duration(1<<uint(retryCount)) * time.Second // 1s, 2s, 4s, 8s...
@@ -367,32 +368,6 @@ func (c *WebSocketTTSClient) getNetworkHealth() (healthy bool, reason string) {
 	}
 
 	return true, "network healthy"
-}
-
-// getAdaptiveTimeout 根据网络状态获取自适应超时时间
-func (c *WebSocketTTSClient) getAdaptiveTimeout() time.Duration {
-	baseTimeout := 30 * time.Second
-
-	healthy, _ := c.getNetworkHealth()
-	if !healthy {
-		// 网络不健康时增加超时时间
-		return baseTimeout * 2
-	}
-
-	// 根据平均响应时间调整超时
-	if c.networkStats.avgResponseTime > 0 {
-		// 超时时间设为平均响应时间的3倍，但不少于基础超时时间
-		adaptiveTimeout := c.networkStats.avgResponseTime * 3
-		if adaptiveTimeout < baseTimeout {
-			return baseTimeout
-		}
-		if adaptiveTimeout > baseTimeout*3 { // 最大不超过基础超时的3倍
-			return baseTimeout * 3
-		}
-		return adaptiveTimeout
-	}
-
-	return baseTimeout
 }
 
 // isTimeoutError 检查错误是否为超时错误
@@ -555,13 +530,6 @@ func (c *WebSocketTTSClient) receiveResponseUnsafe() (*TTSResponse, error) {
 			}
 		}
 	}
-}
-
-// receiveResponse 接收WebSocket响应（带锁保护）
-func (c *WebSocketTTSClient) receiveResponse() (*TTSResponse, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	return c.receiveResponseUnsafe()
 }
 
 // VoiceToCluster 根据音色确定集群

@@ -3,11 +3,12 @@ package tts_api
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"log"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 )
 
 var (
@@ -79,7 +80,7 @@ func (p *TTSConnectionPool) handleRequest(req *TTSPoolRequest) {
 
 	// 检查连接状态，如果连接断开则重连
 	if !client.IsConnected() {
-		if err := client.Connect(); err != nil {
+		if connectErr := client.Connect(); connectErr != nil {
 			// 连接失败，创建新客户端
 			newClient, createErr := p.createNewClient()
 			if createErr != nil {

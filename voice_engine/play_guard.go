@@ -2,23 +2,17 @@ package voice_engine
 
 import (
 	"fmt"
-	"github.com/CoffeeSwt/bilibili-tts-chat/response"
-	user_voice "github.com/CoffeeSwt/bilibili-tts-chat/user"
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/CoffeeSwt/bilibili-tts-chat/response"
+	user_voice "github.com/CoffeeSwt/bilibili-tts-chat/user"
 )
 
 // 初始化随机种子
 func init() {
 	rand.Seed(time.Now().UnixNano())
-}
-
-// 大航海等级名称映射
-var guardLevelNames = map[int]string{
-	1: "总督",
-	2: "提督",
-	3: "舰长",
 }
 
 // 舰长感谢语模板
@@ -65,27 +59,8 @@ var generalTemplates = []string{
 	"感谢%s的大航海！你的支持让我感动！",
 }
 
-// 续费感谢语模板
-var renewalTemplates = []string{
-	"感谢%s续费%s！老朋友的支持最暖心了！",
-	"感谢%s继续开通%s！有你真好！",
-	"感谢%s再次开通%s！你就是我们的老铁！",
-}
-
-// 获取大航海等级名称
-func getGuardLevelName(level int) string {
-	if name, exists := guardLevelNames[level]; exists {
-		return name
-	}
-	return "大航海"
-}
-
 // 获取随机感谢语模板
-func getRandomGuardTemplate(level int, isRenewal bool) []string {
-	// 如果是续费，优先使用续费模板
-	if isRenewal {
-		return renewalTemplates
-	}
+func getRandomGuardTemplate(level int) []string {
 
 	switch level {
 	case 3: // 舰长
@@ -97,14 +72,6 @@ func getRandomGuardTemplate(level int, isRenewal bool) []string {
 	default:
 		return generalTemplates
 	}
-}
-
-// 检测是否为续费（简单逻辑，可以根据实际需求调整）
-func isRenewalGuard(msg response.GuardData) bool {
-	// 这里可以根据实际业务逻辑判断是否为续费
-	// 比如检查用户历史记录、时间间隔等
-	// 目前简单返回false，表示都是新开通
-	return false
 }
 
 func PlayGuardVoice(msg response.GuardData) {
@@ -127,27 +94,13 @@ func GetGuardText(msg response.GuardData) string {
 }
 
 func getGuardText(msg response.GuardData) string {
-	// 获取大航海等级名称
-	levelName := getGuardLevelName(msg.GuardLevel)
-
-	// 检测是否为续费
-	isRenewal := isRenewalGuard(msg)
-
 	// 获取对应的感谢语模板
-	templates := getRandomGuardTemplate(msg.GuardLevel, isRenewal)
+	templates := getRandomGuardTemplate(msg.GuardLevel)
 
 	// 随机选择一个模板
 	template := templates[rand.Intn(len(templates))]
 
 	// 生成感谢语
-	var voiceText string
-	if isRenewal {
-		// 续费感谢语格式
-		voiceText = fmt.Sprintf(template, msg.UserInfo.UName, levelName)
-	} else {
-		// 新开通感谢语格式
-		voiceText = fmt.Sprintf(template, msg.UserInfo.UName)
-	}
-
+	voiceText := fmt.Sprintf(template, msg.UserInfo.UName)
 	return voiceText
 }

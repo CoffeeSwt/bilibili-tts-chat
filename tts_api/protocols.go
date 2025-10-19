@@ -389,7 +389,7 @@ func (m *Message) Unmarshal(data []byte) error {
 	headerSize := 4 * int(m.HeaderSize)
 	readSize := 3
 	if paddingSize := headerSize - readSize; paddingSize > 0 {
-		if n, err := buf.Read(make([]byte, paddingSize)); err != nil || n < paddingSize {
+		if n, readErr := buf.Read(make([]byte, paddingSize)); readErr != nil || n < paddingSize {
 			return fmt.Errorf("insufficient header bytes: expected %d, got %d", paddingSize, n)
 		}
 	}
@@ -571,12 +571,12 @@ func ReceiveMessage(conn *websocket.Conn) (*Message, error) {
 	if mt != websocket.BinaryMessage && mt != websocket.TextMessage {
 		return nil, fmt.Errorf("unexpected Websocket message type: %d", mt)
 	}
-	
+
 	// 检查消息大小，防止过大的消息导致内存问题
 	if len(frame) > 10*1024*1024 { // 10MB 限制
 		return nil, fmt.Errorf("message too large: %d bytes (max 10MB)", len(frame))
 	}
-	
+
 	msg, err := NewMessageFromBytes(frame)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse message: %v", err)
@@ -611,10 +611,10 @@ func FullClientRequest(conn *websocket.Conn, payload []byte) error {
 	if err != nil {
 		return err
 	}
-	
+
 	// 设置写入超时 - 使用固定30秒超时
 	conn.SetWriteDeadline(time.Now().Add(30 * time.Second))
-	
+
 	return conn.WriteMessage(websocket.BinaryMessage, frame)
 }
 
@@ -629,10 +629,10 @@ func AudioOnlyClient(conn *websocket.Conn, payload []byte, flag MsgTypeFlagBits)
 	if err != nil {
 		return err
 	}
-	
+
 	// 设置写入超时
 	conn.SetWriteDeadline(time.Now().Add(30 * time.Second))
-	
+
 	return conn.WriteMessage(websocket.BinaryMessage, frame)
 }
 

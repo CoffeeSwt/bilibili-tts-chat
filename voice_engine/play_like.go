@@ -2,12 +2,13 @@ package voice_engine
 
 import (
 	"fmt"
-	"github.com/CoffeeSwt/bilibili-tts-chat/response"
-	user_voice "github.com/CoffeeSwt/bilibili-tts-chat/user"
 	"log"
 	"math/rand"
 	"sync"
 	"time"
+
+	"github.com/CoffeeSwt/bilibili-tts-chat/response"
+	user_voice "github.com/CoffeeSwt/bilibili-tts-chat/user"
 )
 
 // 初始化随机种子
@@ -113,7 +114,7 @@ func resetUserLikeCombo(username string) {
 }
 
 // 获取随机点赞感谢语
-func getRandomLikeTemplate(username string, comboCount int) string {
+func getRandomLikeTemplate(comboCount int) string {
 	// 超级连击（5次以上）
 	if comboCount >= 5 {
 		return superComboTemplates[rand.Intn(len(superComboTemplates))]
@@ -150,7 +151,7 @@ func PlayLikeVoice(msg response.LikeData) {
 	comboCount := getUserLikeCombo(msg.UName)
 
 	// 获取随机感谢语模板
-	template := getRandomLikeTemplate(msg.UName, comboCount)
+	template := getRandomLikeTemplate(comboCount)
 
 	// 生成基础感谢语
 	voiceText := fmt.Sprintf(template, msg.UName)

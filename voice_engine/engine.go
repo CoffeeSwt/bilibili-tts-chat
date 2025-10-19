@@ -5,8 +5,6 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/CoffeeSwt/bilibili-tts-chat/config"
-	"github.com/CoffeeSwt/bilibili-tts-chat/tts_api"
 	"io"
 	"log"
 	"math/rand"
@@ -14,6 +12,9 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
+
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
+	"github.com/CoffeeSwt/bilibili-tts-chat/tts_api"
 
 	"github.com/ebitengine/oto/v3"
 	"github.com/go-audio/wav"
@@ -125,7 +126,8 @@ func (am *AudioManager) ensureOtoContext(task *AudioTask) error {
 	var sampleRate int
 	var channelCount int
 
-	if task.Format == "mp3" {
+	switch task.Format {
+	case "mp3":
 		reader := bytes.NewReader(task.AudioData)
 		decoder, err := mp3.NewDecoder(reader)
 		if err != nil {
@@ -133,7 +135,7 @@ func (am *AudioManager) ensureOtoContext(task *AudioTask) error {
 		}
 		sampleRate = decoder.SampleRate()
 		channelCount = 2 // MP3通常是立体声
-	} else if task.Format == "wav" {
+	case "wav":
 		reader := bytes.NewReader(task.AudioData)
 		decoder := wav.NewDecoder(reader)
 		if !decoder.IsValidFile() {
@@ -145,7 +147,7 @@ func (am *AudioManager) ensureOtoContext(task *AudioTask) error {
 		}
 		sampleRate = int(format.SampleRate)
 		channelCount = int(format.NumChannels)
-	} else {
+	default:
 		// 默认参数
 		sampleRate = 44100
 		channelCount = 2
@@ -573,113 +575,6 @@ func PlayVoiceFromBytesWithContext(ctx context.Context, audioData []byte) error 
 	return manager.PlayAudioWithQueue(ctx, audioData, format)
 }
 
-// playMP3FromBytesWithContext 带上下文的MP3播放
-func playMP3FromBytesWithContext(ctx context.Context, audioData []byte) error {
-	reader := bytes.NewReader(audioData)
-
-	// 解码MP3
-	decoder, err := mp3.NewDecoder(reader)
-	if err != nil {
-		return fmt.Errorf("failed to create MP3 decoder: %w", err)
-	}
-
-	// 初始化oto上下文
-	otoCtx, readyChan, err := oto.NewContext(&oto.NewContextOptions{
-		SampleRate:   decoder.SampleRate(),
-		ChannelCount: 2, // MP3通常是立体声
-		Format:       oto.FormatSignedInt16LE,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create oto context: %w", err)
-	}
-
-	// 等待oto准备就绪或上下文取消
-	select {
-	case <-readyChan:
-		// 继续执行
-	case <-ctx.Done():
-		return ctx.Err()
-	}
-
-	// 创建播放器
-	player := otoCtx.NewPlayer(decoder)
-	defer player.Close()
-
-	// 开始播放
-	player.Play()
-
-	// 等待播放完成或上下文取消
-	for player.IsPlaying() {
-		select {
-		case <-ctx.Done():
-			player.Close()
-			return ctx.Err()
-		default:
-			time.Sleep(10 * time.Millisecond)
-		}
-	}
-
-	return nil
-}
-
-// playWAVFromBytesWithContext 带上下文的WAV播放
-func playWAVFromBytesWithContext(ctx context.Context, audioData []byte) error {
-	reader := bytes.NewReader(audioData)
-
-	// 解析WAV文件
-	decoder := wav.NewDecoder(reader)
-	if !decoder.IsValidFile() {
-		return fmt.Errorf("invalid WAV file")
-	}
-
-	// 重置读取器位置
-	reader.Seek(0, io.SeekStart)
-
-	// 获取音频格式信息
-	format := decoder.Format()
-	if format == nil {
-		return fmt.Errorf("failed to get audio format")
-	}
-
-	// 初始化oto上下文
-	otoCtx, readyChan, err := oto.NewContext(&oto.NewContextOptions{
-		SampleRate:   int(format.SampleRate),
-		ChannelCount: int(format.NumChannels),
-		Format:       oto.FormatSignedInt16LE,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create oto context: %w", err)
-	}
-
-	// 等待oto准备就绪或上下文取消
-	select {
-	case <-readyChan:
-		// 继续执行
-	case <-ctx.Done():
-		return ctx.Err()
-	}
-
-	// 创建播放器
-	player := otoCtx.NewPlayer(reader)
-	defer player.Close()
-
-	// 开始播放
-	player.Play()
-
-	// 等待播放完成或上下文取消
-	for player.IsPlaying() {
-		select {
-		case <-ctx.Done():
-			player.Close()
-			return ctx.Err()
-		default:
-			time.Sleep(10 * time.Millisecond)
-		}
-	}
-
-	return nil
-}
-
 // playAudioFile 播放音频文件
 func playAudioFile(filePath string) error {
 	// 打开音频文件
@@ -746,91 +641,6 @@ func PlayVoiceFromBytes(audioData []byte) error {
 	// 使用队列播放音频
 	ctx := context.Background()
 	return manager.PlayAudioWithQueue(ctx, audioData, format)
-}
-
-// playMP3FromBytes 播放MP3格式音频
-func playMP3FromBytes(audioData []byte) error {
-	reader := bytes.NewReader(audioData)
-
-	// 解码MP3
-	decoder, err := mp3.NewDecoder(reader)
-	if err != nil {
-		return fmt.Errorf("failed to create MP3 decoder: %w", err)
-	}
-
-	// 初始化oto上下文
-	ctx, readyChan, err := oto.NewContext(&oto.NewContextOptions{
-		SampleRate:   decoder.SampleRate(),
-		ChannelCount: 2, // MP3通常是立体声
-		Format:       oto.FormatSignedInt16LE,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create oto context: %w", err)
-	}
-
-	// 等待oto准备就绪
-	<-readyChan
-
-	// 创建播放器
-	player := ctx.NewPlayer(decoder)
-	defer player.Close()
-
-	// 开始播放
-	player.Play()
-
-	// 等待播放完成
-	for player.IsPlaying() {
-		time.Sleep(10 * time.Millisecond)
-	}
-
-	return nil
-}
-
-// playWAVFromBytes 播放WAV格式音频
-func playWAVFromBytes(audioData []byte) error {
-	reader := bytes.NewReader(audioData)
-
-	// 解析WAV文件
-	decoder := wav.NewDecoder(reader)
-	if !decoder.IsValidFile() {
-		return fmt.Errorf("invalid WAV file")
-	}
-
-	// 重置读取器位置
-	reader.Seek(0, io.SeekStart)
-
-	// 获取音频格式信息
-	format := decoder.Format()
-	if format == nil {
-		return fmt.Errorf("failed to get audio format")
-	}
-
-	// 初始化oto上下文
-	ctx, readyChan, err := oto.NewContext(&oto.NewContextOptions{
-		SampleRate:   int(format.SampleRate),
-		ChannelCount: int(format.NumChannels),
-		Format:       oto.FormatSignedInt16LE,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create oto context: %w", err)
-	}
-
-	// 等待oto准备就绪
-	<-readyChan
-
-	// 创建播放器
-	player := ctx.NewPlayer(reader)
-	defer player.Close()
-
-	// 开始播放
-	player.Play()
-
-	// 等待播放完成
-	for player.IsPlaying() {
-		time.Sleep(10 * time.Millisecond)
-	}
-
-	return nil
 }
 
 // PlayVoiceAsync 异步播放音频（非阻塞）
