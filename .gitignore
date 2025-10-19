@@ -1,0 +1,51 @@
+# 敏感配置文件
+.env
+config.yaml
+
+# Go 编译产物
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bilibili-tts-chat
+bilibili-tts-chat.exe
+
+# 测试文件
+*.test
+
+# 输出目录
+/dist/
+/build/
+
+# 依赖目录
+vendor/
+
+# Go 工作空间文件
+go.work
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 备份文件
+*.bak
