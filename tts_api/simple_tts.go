@@ -123,11 +123,38 @@ func isConnectionError(err error) bool {
 	if err == nil {
 		return false
 	}
-	errStr := err.Error()
-	return strings.Contains(errStr, "connection") ||
-		strings.Contains(errStr, "websocket") ||
-		strings.Contains(errStr, "bad MASK") ||
-		strings.Contains(errStr, "closed network")
+	errStr := strings.ToLower(err.Error())
+	
+	// 检查WebSocket关闭错误代码1006 (异常关闭)
+	if strings.Contains(errStr, "close 1006") || strings.Contains(errStr, "abnormal closure") {
+		return true
+	}
+	
+	// 检查其他连接相关错误
+	connectionErrors := []string{
+		"connection",
+		"websocket",
+		"bad mask",
+		"closed network",
+		"unexpected eof",
+		"broken pipe",
+		"connection reset",
+		"network is unreachable",
+		"no route to host",
+		"connection refused",
+		"connection timed out",
+		"i/o timeout",
+		"context deadline exceeded",
+		"use of closed network connection",
+	}
+	
+	for _, errPattern := range connectionErrors {
+		if strings.Contains(errStr, errPattern) {
+			return true
+		}
+	}
+	
+	return false
 }
 
 // getClient 从连接池获取客户端

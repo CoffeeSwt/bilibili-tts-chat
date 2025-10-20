@@ -118,11 +118,36 @@ func (c *WebSocketTTSClient) connectUnsafe() error {
 		},
 	}
 
+	glog.Infof("尝试连接到TTS WebSocket服务: %s", c.endpoint)
+	glog.Infof("连接参数: AppID=%s, Token=%s...", c.appID, func() string {
+		if len(c.accessToken) > 10 {
+			return c.accessToken[:10]
+		}
+		return c.accessToken
+	}())
+
 	conn, resp, err := dialer.DialContext(c.ctx, c.endpoint, header)
 	if err != nil {
 		c.reconnectAttempts++
-		return fmt.Errorf("failed to connect to WebSocket (attempt %d/%d): %v",
-			c.reconnectAttempts, c.maxReconnectAttempts, err)
+
+		// 提供更详细的错误信息
+		var errorDetail string
+		if resp != nil {
+			errorDetail = fmt.Sprintf("HTTP状态: %d, 响应头: %v", resp.StatusCode, resp.Header)
+			if resp.StatusCode == 401 {
+				errorDetail += " (可能是认证失败，请检查AppID和AccessToken)"
+			} else if resp.StatusCode == 403 {
+				errorDetail += " (可能是权限不足或配额用尽)"
+			} else if resp.StatusCode >= 500 {
+				errorDetail += " (服务器内部错误)"
+			}
+		} else {
+			errorDetail = "网络连接失败，请检查网络连接和服务地址"
+		}
+
+		glog.Errorf("WebSocket连接失败 (第%d次尝试): %v, %s", c.reconnectAttempts, err, errorDetail)
+		return fmt.Errorf("failed to connect to WebSocket (attempt %d/%d): %v, %s",
+			c.reconnectAttempts, c.maxReconnectAttempts, err, errorDetail)
 	}
 
 	c.conn = conn
@@ -240,7 +265,42 @@ func (c *WebSocketTTSClient) sendTTSRequestWithRetry(req TTSRequest, retryCount 
 		req.Cluster = VoiceToCluster(req.Voice)
 	}
 
+	// 记录音色和集群映射关系用于调试
+	glog.Infof("音色和集群映射详情:")
+	glog.Infof("  - 音色ID: %s", req.Voice)
+	glog.Infof("  - 映射集群: %s", req.Cluster)
+
+	// 分析音色类型
+	var voiceType string
+	if strings.HasPrefix(req.Voice, "ICL_") {
+		voiceType = "ICL系列音色"
+	} else if strings.HasPrefix(req.Voice, "saturn_") {
+		voiceType = "豆包语音合成模型2.0音色（saturn前缀）"
+	} else if strings.Contains(req.Voice, "_saturn_") {
+		voiceType = "豆包语音合成模型2.0音色（saturn后缀）"
+	} else if strings.Contains(req.Voice, "_jupiter_") {
+		voiceType = "端到端实时语音大模型-O版本服务端音色"
+	} else if strings.Contains(req.Voice, "_mars_") {
+		voiceType = "豆包语音合成模型1.0音色"
+	} else if strings.Contains(req.Voice, "_uranus_") {
+		voiceType = "uranus系列音色"
+	} else if strings.Contains(req.Voice, "_moon_") {
+		voiceType = "moon系列音色"
+	} else {
+		voiceType = "其他音色"
+	}
+	glog.Infof("  - 音色类型: %s", voiceType)
+
+	// 验证请求参数
+	if err := c.validateTTSRequest(req); err != nil {
+		glog.Errorf("请求参数验证失败: %v", err)
+		return nil, fmt.Errorf("invalid request parameters: %v", err)
+	}
+
 	// 构建请求
+	reqID := uuid.New().String()
+	userID := uuid.New().String()
+
 	request := map[string]interface{}{
 		"app": map[string]interface{}{
 			"appid":   c.appID,
@@ -248,14 +308,14 @@ func (c *WebSocketTTSClient) sendTTSRequestWithRetry(req TTSRequest, retryCount 
 			"cluster": req.Cluster,
 		},
 		"user": map[string]interface{}{
-			"uid": uuid.New().String(),
+			"uid": userID,
 		},
 		"audio": map[string]interface{}{
 			"voice_type": req.Voice,
 			"encoding":   req.Encoding,
 		},
 		"request": map[string]interface{}{
-			"reqid":          uuid.New().String(),
+			"reqid":          reqID,
 			"text":           req.Text,
 			"operation":      "submit",
 			"with_timestamp": "1",
@@ -268,13 +328,37 @@ func (c *WebSocketTTSClient) sendTTSRequestWithRetry(req TTSRequest, retryCount 
 		},
 	}
 
+	// 记录详细的请求参数用于调试
+	glog.Infof("TTS请求参数详情:")
+	glog.Infof("  - AppID: %s", c.appID)
+	glog.Infof("  - Token: %s...", func() string {
+		if len(c.accessToken) > 10 {
+			return c.accessToken[:10]
+		}
+		return c.accessToken
+	}())
+	glog.Infof("  - Cluster: %s", req.Cluster)
+	glog.Infof("  - Voice: %s", req.Voice)
+	glog.Infof("  - Encoding: %s", req.Encoding)
+	glog.Infof("  - RequestID: %s", reqID)
+	glog.Infof("  - UserID: %s", userID)
+	glog.Infof("  - Text: %s", func() string {
+		if len(req.Text) > 50 {
+			return req.Text[:50] + "..."
+		}
+		return req.Text
+	}())
+
 	payload, err := json.Marshal(request)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal request: %v", err)
 	}
 
 	// 发送请求
+	glog.Infof("发送TTS请求到服务器...")
 	if err = FullClientRequest(c.conn, payload); err != nil {
+		glog.Errorf("发送TTS请求失败: %v", err)
+
 		if isConnectionError(err) && retryCount < maxRetries {
 			// 智能指数退避策略：基础延迟 + 随机抖动
 			baseDelay := time.Duration(1<<uint(retryCount)) * time.Second // 1s, 2s, 4s, 8s...
@@ -286,8 +370,22 @@ func (c *WebSocketTTSClient) sendTTSRequestWithRetry(req TTSRequest, retryCount 
 			time.Sleep(totalDelay)
 			return c.sendTTSRequestWithRetry(req, retryCount+1)
 		}
-		return nil, fmt.Errorf("failed to send request: %v", err)
+
+		// 提供更详细的错误信息
+		var errorDetail string
+		if strings.Contains(err.Error(), "connection") {
+			errorDetail = "连接已断开，请检查网络连接"
+		} else if strings.Contains(err.Error(), "timeout") {
+			errorDetail = "请求超时，可能是网络延迟过高"
+		} else if strings.Contains(err.Error(), "closed") {
+			errorDetail = "连接已关闭，可能是服务器主动断开连接"
+		} else {
+			errorDetail = "未知的发送错误"
+		}
+
+		return nil, fmt.Errorf("failed to send request: %v (%s)", err, errorDetail)
 	}
+	glog.Infof("TTS请求发送成功，等待服务器响应...")
 
 	// 接收响应
 	response, err := c.receiveResponseUnsafe()
@@ -298,18 +396,61 @@ func (c *WebSocketTTSClient) sendTTSRequestWithRetry(req TTSRequest, retryCount 
 		isTimeout := isTimeoutError(err)
 		c.updateNetworkStats(false, isTimeout, responseTime)
 
-		if isConnectionError(err) && retryCount < maxRetries {
-			// 智能指数退避策略：基础延迟 + 随机抖动
-			baseDelay := time.Duration(1<<uint(retryCount)) * time.Second // 1s, 2s, 4s, 8s...
-			jitter := time.Duration(retryCount*500) * time.Millisecond    // 添加抖动避免雷群效应
-			totalDelay := baseDelay + jitter
+		glog.Errorf("接收TTS响应失败: %v", err)
 
-			glog.Warningf("接收响应失败，标记连接为不健康并等待%v后重试 (第%d次重试): %v", totalDelay, retryCount+1, err)
-			c.connected = false // 标记连接为不健康
+		if isConnectionError(err) && retryCount < maxRetries {
+			// 标记连接为不健康
+			c.connected = false
+			
+			var totalDelay time.Duration
+			
+			// 针对1006异常关闭错误和其他严重连接错误，使用快速重试策略
+			if shouldFastRetry(err) {
+				// 快速重试：短延迟，适用于异常关闭等可能快速恢复的错误
+				if retryCount == 0 {
+					totalDelay = 100 * time.Millisecond // 第一次重试几乎立即
+				} else if retryCount == 1 {
+					totalDelay = 500 * time.Millisecond // 第二次重试稍微等待
+				} else {
+					// 后续重试使用指数退避，但起始延迟较小
+					baseDelay := time.Duration(1<<uint(retryCount-2)) * time.Second // 1s, 2s, 4s...
+					jitter := time.Duration(retryCount*200) * time.Millisecond     // 减少抖动
+					totalDelay = baseDelay + jitter
+				}
+				
+				glog.Warningf("检测到异常关闭错误(1006)，快速重试 - 等待%v后重试 (第%d次重试): %v", totalDelay, retryCount+1, err)
+			} else {
+				// 普通连接错误使用标准指数退避策略
+				baseDelay := time.Duration(1<<uint(retryCount)) * time.Second // 1s, 2s, 4s, 8s...
+				jitter := time.Duration(retryCount*500) * time.Millisecond    // 添加抖动避免雷群效应
+				totalDelay = baseDelay + jitter
+				
+				glog.Warningf("接收响应失败，标记连接为不健康并等待%v后重试 (第%d次重试): %v", totalDelay, retryCount+1, err)
+			}
+			
 			time.Sleep(totalDelay)
 			return c.sendTTSRequestWithRetry(req, retryCount+1)
 		}
-		return nil, err
+
+		// 提供更详细的错误信息
+		var errorDetail string
+		if isTimeout {
+			errorDetail = "响应超时，可能是服务器处理时间过长或网络延迟"
+		} else if isAbnormalCloseError(err) {
+			errorDetail = "WebSocket异常关闭(1006)，通常由网络中断或服务器异常断开导致，已尝试快速重连"
+		} else if strings.Contains(err.Error(), "Init Engine Instance failed") {
+			errorDetail = "TTS引擎初始化失败，可能是认证问题或服务配置错误"
+		} else if strings.Contains(err.Error(), "unexpected EOF") {
+			errorDetail = "连接意外中断，可能是网络不稳定或服务器重启"
+		} else if strings.Contains(err.Error(), "connection") {
+			errorDetail = "连接中断，可能是网络不稳定"
+		} else if strings.Contains(err.Error(), "closed") {
+			errorDetail = "连接被关闭，可能是服务器主动断开"
+		} else {
+			errorDetail = "未知的响应错误"
+		}
+
+		return nil, fmt.Errorf("failed to receive response: %v (%s)", err, errorDetail)
 	}
 
 	// 成功接收响应，更新统计信息
@@ -375,11 +516,26 @@ func isTimeoutError(err error) bool {
 	if err == nil {
 		return false
 	}
-
 	errStr := err.Error()
 	return strings.Contains(errStr, "timeout") ||
-		strings.Contains(errStr, "i/o timeout") ||
-		strings.Contains(errStr, "deadline exceeded")
+		strings.Contains(errStr, "deadline exceeded") ||
+		strings.Contains(errStr, "i/o timeout")
+}
+
+// isAbnormalCloseError 检查是否为WebSocket异常关闭错误（1006）
+func isAbnormalCloseError(err error) bool {
+	if err == nil {
+		return false
+	}
+	errStr := strings.ToLower(err.Error())
+	return strings.Contains(errStr, "close 1006") || strings.Contains(errStr, "abnormal closure")
+}
+
+// shouldFastRetry 判断是否应该快速重试（针对1006等异常关闭错误）
+func shouldFastRetry(err error) bool {
+	return isAbnormalCloseError(err) || 
+		   strings.Contains(strings.ToLower(err.Error()), "unexpected eof") ||
+		   strings.Contains(strings.ToLower(err.Error()), "broken pipe")
 }
 
 // startHeartbeat 启动心跳机制
@@ -387,8 +543,8 @@ func (c *WebSocketTTSClient) startHeartbeat() {
 	// 停止之前的心跳（如果存在）
 	c.stopHeartbeat()
 
-	// 创建新的心跳定时器，每30秒发送一次ping
-	c.heartbeatTicker = time.NewTicker(30 * time.Second)
+	// 创建新的心跳定时器，每20秒发送一次ping（更频繁的心跳）
+	c.heartbeatTicker = time.NewTicker(20 * time.Second)
 
 	go func() {
 		defer func() {
@@ -397,16 +553,37 @@ func (c *WebSocketTTSClient) startHeartbeat() {
 			}
 		}()
 
+		consecutiveFailures := 0
+		maxConsecutiveFailures := 3 // 连续失败3次后触发重连
+
 		for {
 			select {
 			case <-c.heartbeatTicker.C:
 				// 发送ping消息
 				if err := c.sendPing(); err != nil {
-					glog.Warningf("发送心跳ping失败: %v", err)
-					// 标记连接为不健康，下次请求时会重连
-					c.mu.Lock()
-					c.connected = false
-					c.mu.Unlock()
+					consecutiveFailures++
+					glog.Warningf("发送心跳ping失败 (连续失败%d次): %v", consecutiveFailures, err)
+					
+					// 检查是否为连接错误
+					if isConnectionError(err) || consecutiveFailures >= maxConsecutiveFailures {
+						glog.Errorf("心跳检测到连接异常，标记连接为不健康")
+						c.mu.Lock()
+						c.connected = false
+						c.mu.Unlock()
+						
+						// 如果是严重的连接错误，尝试主动重连
+						if isAbnormalCloseError(err) || consecutiveFailures >= maxConsecutiveFailures {
+							glog.Infof("尝试主动重连...")
+							go c.attemptReconnect()
+						}
+					}
+				} else {
+					// 心跳成功，重置失败计数
+					if consecutiveFailures > 0 {
+						glog.V(2).Infof("心跳恢复正常，重置失败计数")
+						consecutiveFailures = 0
+					}
+					c.lastPingTime = time.Now()
 				}
 			case <-c.heartbeatDone:
 				glog.V(3).Infof("心跳机制已停止")
@@ -418,7 +595,7 @@ func (c *WebSocketTTSClient) startHeartbeat() {
 		}
 	}()
 
-	glog.V(2).Infof("心跳机制已启动")
+	glog.V(2).Infof("心跳机制已启动（间隔20秒）")
 }
 
 // stopHeartbeat 停止心跳机制
@@ -453,6 +630,49 @@ func (c *WebSocketTTSClient) sendPing() error {
 
 	glog.V(3).Infof("发送心跳ping消息")
 	return nil
+}
+
+// attemptReconnect 尝试重新连接
+func (c *WebSocketTTSClient) attemptReconnect() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	
+	// 避免重复重连
+	if c.connected {
+		return
+	}
+	
+	glog.Infof("开始尝试重新连接...")
+	
+	// 先断开现有连接
+	if c.conn != nil {
+		c.conn.Close()
+		c.conn = nil
+	}
+	
+	// 尝试重连，最多重试3次
+	maxReconnectAttempts := 3
+	for attempt := 1; attempt <= maxReconnectAttempts; attempt++ {
+		glog.Infof("重连尝试 %d/%d", attempt, maxReconnectAttempts)
+		
+		if err := c.connectUnsafe(); err != nil {
+			glog.Errorf("重连失败 (尝试%d/%d): %v", attempt, maxReconnectAttempts, err)
+			
+			if attempt < maxReconnectAttempts {
+				// 等待一段时间后重试
+				delay := time.Duration(attempt) * time.Second
+				glog.Infof("等待%v后重试...", delay)
+				time.Sleep(delay)
+			}
+		} else {
+			glog.Infof("重连成功！")
+			c.connected = true
+			c.reconnectAttempts = 0
+			return
+		}
+	}
+	
+	glog.Errorf("重连失败，已达到最大重试次数")
 }
 
 // receiveResponseUnsafe 接收WebSocket响应（不加锁版本）
@@ -533,10 +753,104 @@ func (c *WebSocketTTSClient) receiveResponseUnsafe() (*TTSResponse, error) {
 }
 
 // VoiceToCluster 根据音色确定集群
+// validateTTSRequest 验证TTS请求参数
+func (c *WebSocketTTSClient) validateTTSRequest(req TTSRequest) error {
+	// 验证文本内容
+	if strings.TrimSpace(req.Text) == "" {
+		return fmt.Errorf("text cannot be empty")
+	}
+
+	// 验证文本长度（假设最大长度为5000字符）
+	if len(req.Text) > 5000 {
+		return fmt.Errorf("text too long: %d characters (max: 5000)", len(req.Text))
+	}
+
+	// 验证音色参数
+	if req.Voice == "" {
+		return fmt.Errorf("voice cannot be empty")
+	}
+
+	// 验证编码格式
+	validEncodings := []string{"mp3", "wav", "pcm"}
+	isValidEncoding := false
+	for _, encoding := range validEncodings {
+		if req.Encoding == encoding {
+			isValidEncoding = true
+			break
+		}
+	}
+	if !isValidEncoding {
+		return fmt.Errorf("invalid encoding: %s (supported: %v)", req.Encoding, validEncodings)
+	}
+
+	// 验证集群参数
+	validClusters := []string{"volcano_tts", "volcano_icl"}
+	isValidCluster := false
+	for _, cluster := range validClusters {
+		if req.Cluster == cluster {
+			isValidCluster = true
+			break
+		}
+	}
+	if !isValidCluster {
+		return fmt.Errorf("invalid cluster: %s (supported: %v)", req.Cluster, validClusters)
+	}
+
+	// 验证客户端配置
+	if c.appID == "" {
+		return fmt.Errorf("appID is not configured")
+	}
+	if c.accessToken == "" {
+		return fmt.Errorf("access token is not configured")
+	}
+
+	return nil
+}
+
 func VoiceToCluster(voice string) string {
+	// 根据火山引擎文档的音色分类来确定集群
+
+	// ICL系列音色使用 volcano_icl 集群
+	if strings.HasPrefix(voice, "ICL_") {
+		return "volcano_icl"
+	}
+
+	// 豆包语音合成模型2.0音色（saturn系列）使用 volcano_tts 集群
+	if strings.HasPrefix(voice, "saturn_") {
+		return "volcano_tts"
+	}
+
+	// 端到端实时语音大模型-O版本服务端音色（jupiter系列）使用 volcano_tts 集群
+	if strings.Contains(voice, "_jupiter_") {
+		return "volcano_tts"
+	}
+
+	// 豆包语音合成模型1.0音色（mars系列）使用 volcano_tts 集群
+	if strings.Contains(voice, "_mars_") {
+		return "volcano_tts"
+	}
+
+	// 其他saturn系列音色（如saturn_bigtts后缀）使用 volcano_tts 集群
+	if strings.Contains(voice, "_saturn_") {
+		return "volcano_tts"
+	}
+
+	// uranus系列音色使用 volcano_tts 集群
+	if strings.Contains(voice, "_uranus_") {
+		return "volcano_tts"
+	}
+
+	// moon系列音色使用 volcano_tts 集群
+	if strings.Contains(voice, "_moon_") {
+		return "volcano_tts"
+	}
+
+	// 兼容旧的S_前缀音色（映射到ICL）
 	if len(voice) > 2 && voice[:2] == "S_" {
 		return "volcano_icl"
 	}
+
+	// 默认使用 volcano_tts 集群
 	return "volcano_tts"
 }
 
