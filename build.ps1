@@ -55,8 +55,7 @@ try {
 Write-Host "Copying and preparing configuration files..." -ForegroundColor Cyan
 
 $configFiles = @(
-    @{Source = ".env.example"; Target = ".env"},
-    @{Source = "config.yaml.example"; Target = "config.yaml"}
+    @{Source = ".env.example"; Target = ".env"}
 )
 
 foreach ($config in $configFiles) {
