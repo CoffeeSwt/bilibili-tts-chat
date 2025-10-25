@@ -1,6 +1,6 @@
 # 敏感配置文件
 .env
-config.yaml
+user.json       
 
 # Go 编译产物
 *.exe

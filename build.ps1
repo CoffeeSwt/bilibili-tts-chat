@@ -56,7 +56,7 @@ Write-Host "正在复制和准备配置文件..." -ForegroundColor Cyan
 
 $configFiles = @(
     @{Source = ".env.example"; Target = ".env"}
-    @{Source = "user.json"; Target = "user.json"}
+    @{Source = "user.example.json"; Target = "user.json"}
     @{Source = "voices.json"; Target = "voices.json"}
 )
 
@@ -67,6 +67,21 @@ foreach ($config in $configFiles) {
     if (Test-Path $sourceFile) {
         try {
             if ($sourceFile -eq ".env.example") {
+                # 复制.example文件到dist目录
+                Copy-Item $sourceFile -Destination "dist\"
+                Write-Host "已复制：$sourceFile 到 dist/" -ForegroundColor Green
+                
+                # 在dist目录中重命名文件以移除.example后缀
+                $distExampleFile = "dist\$sourceFile"
+                $distTargetFile = "dist\$targetFile"
+                
+                if (Test-Path $distExampleFile) {
+                    Rename-Item $distExampleFile -NewName $targetFile
+                    Write-Host "已重命名：$sourceFile -> $targetFile" -ForegroundColor Green
+                } else {
+                    Write-Host "警告：找不到已复制的文件：$distExampleFile" -ForegroundColor Yellow
+                }
+            } elseif ($sourceFile -eq "user.example.json") {
                 # 复制.example文件到dist目录
                 Copy-Item $sourceFile -Destination "dist\"
                 Write-Host "已复制：$sourceFile 到 dist/" -ForegroundColor Green
