@@ -40,14 +40,15 @@ const (
 
 // WorkflowProcessor 工作流处理器
 type WorkflowProcessor struct {
-	mutex       sync.RWMutex              // 读写锁
-	config      *WorkflowConfig           // 配置
-	status      WorkflowStatus            // 当前状态
-	ctx         context.Context           // 上下文
-	cancel      context.CancelFunc        // 取消函数
-	taskManager *task_manager.TaskManager // 任务管理器
-	llmClient   *llm.LLMClient            // LLM客户端
-	voice       *config.Voice             // 语音配置
+	mutex            sync.RWMutex              // 读写锁
+	config           *WorkflowConfig           // 配置
+	status           WorkflowStatus            // 当前状态
+	ctx              context.Context           // 上下文
+	cancel           context.CancelFunc        // 取消函数
+	taskManager      *task_manager.TaskManager // 任务管理器
+	llmClient        *llm.LLMClient            // LLM客户端
+	voice            *config.Voice             // 语音配置
+	taskCompleteChan chan struct{}             // 任务完成事件通道
 
 	// 统计信息
 	stats struct {
@@ -80,9 +81,10 @@ func GetInstance() *WorkflowProcessor {
 				SystemPrompt:   "你是一个智能助手，请根据用户的消息生成简洁、友好的回复。",
 				EnableDebugLog: true,
 			},
-			status:      StatusStopped,
-			taskManager: task_manager.GetInstance(),
-			llmClient:   llm.GetInstance(),
+			status:           StatusStopped,
+			taskManager:      task_manager.GetInstance(),
+			llmClient:        llm.GetInstance(),
+			taskCompleteChan: make(chan struct{}, 10), // 缓冲通道，避免阻塞
 		}
 		logger.Info("工作流处理器初始化完成")
 	})
@@ -160,7 +162,16 @@ func (wp *WorkflowProcessor) Start() error {
 	// 启动主处理循环
 	go wp.processLoop()
 
-	logger.Info("工作流处理器已启动")
+	// 触发初始任务检查事件
+	go func() {
+		time.Sleep(100 * time.Millisecond) // 稍等一下确保processLoop已启动
+		select {
+		case wp.taskCompleteChan <- struct{}{}:
+		default:
+		}
+	}()
+
+	logger.Info("工作流处理器已启动 (事件驱动模式)")
 	return nil
 }
 
@@ -227,17 +238,21 @@ func (wp *WorkflowProcessor) calculateSuccessRate() float64 {
 
 // processLoop 主处理循环
 func (wp *WorkflowProcessor) processLoop() {
-	ticker := time.NewTicker(wp.config.CheckInterval)
-	defer ticker.Stop()
+	logger.Info("工作流处理循环已启动 (事件驱动模式)")
 
-	logger.Info("工作流处理循环已启动")
+	// 启动时检查一次是否有待处理任务
+	wp.checkAndProcessTasks()
 
 	for {
 		select {
 		case <-wp.ctx.Done():
 			logger.Info("工作流处理循环已退出")
 			return
-		case <-ticker.C:
+		case <-wp.taskCompleteChan:
+			// 收到任务完成事件，立即检查新任务
+			if wp.config.EnableDebugLog {
+				logger.Debug("收到任务完成事件，检查新任务")
+			}
 			wp.checkAndProcessTasks()
 		}
 	}
@@ -340,17 +355,30 @@ func (wp *WorkflowProcessor) processTaskInternal(taskID int64, texts []string) e
 		return fmt.Errorf("LLM调用失败: %v", err)
 	}
 
-	// 3. 转换为语音
-	audioData, err := wp.generateSpeech(taskID, response)
-	if err != nil {
-		return fmt.Errorf("语音生成失败: %v", err)
+	// AI生成完成，立即触发下一个任务检查事件
+	select {
+	case wp.taskCompleteChan <- struct{}{}:
+		if wp.config.EnableDebugLog {
+			logger.Debug(fmt.Sprintf("任务 #%d AI生成完成，已触发下一任务检查事件", taskID))
+		}
+	default:
+		// 通道已满，不阻塞
 	}
 
-	// 4. 播放语音
-	err = wp.playAudio(taskID, audioData)
-	if err != nil {
-		return fmt.Errorf("音频播放失败: %v", err)
-	}
+	// 4. 播放语音（异步进行，不影响下一个任务处理）
+	go func(resp string) {
+		// 3. 转换为语音
+		audioData, err := wp.generateSpeech(taskID, resp)
+		if err != nil {
+			logger.Error(fmt.Sprintf("任务 #%d 语音生成失败: %v", taskID, err))
+			return
+		}
+
+		err = wp.playAudio(taskID, audioData)
+		if err != nil {
+			logger.Error(fmt.Sprintf("任务 #%d 音频播放失败: %v", taskID, err))
+		}
+	}(response)
 
 	return nil
 }
