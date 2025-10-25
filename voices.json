@@ -97,6 +97,1910 @@
             "voice_type": "zh_female_tianxinxiaomei_emo_v2_mars_bigtts",
             "gender": "female",
             "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 15,
+            "name": "高冷御姐",
+            "voice_type": "zh_female_gaolengyujie_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 16,
+            "name": "傲娇霸总",
+            "voice_type": "zh_male_aojiaobazong_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 17,
+            "name": "广州德哥",
+            "voice_type": "zh_male_guangzhoudege_emo_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 18,
+            "name": "京腔侃爷",
+            "voice_type": "zh_male_jingqiangkanye_emo_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 19,
+            "name": "邻居阿姨",
+            "voice_type": "zh_female_linjuayi_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 20,
+            "name": "优柔公子",
+            "voice_type": "zh_male_yourougongzi_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 21,
+            "name": "儒雅男友",
+            "voice_type": "zh_male_ruyayichen_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 22,
+            "name": "俊朗男友",
+            "voice_type": "zh_male_junlangnanyou_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 23,
+            "name": "北京小爷",
+            "voice_type": "zh_male_beijingxiaoye_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 24,
+            "name": "柔美女友",
+            "voice_type": "zh_female_roumeinvyou_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 25,
+            "name": "阳光青年",
+            "voice_type": "zh_male_yangguangqingnian_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 26,
+            "name": "魅力女友",
+            "voice_type": "zh_female_meilinvyou_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 27,
+            "name": "爽快思思",
+            "voice_type": "zh_female_shuangkuaisisi_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 28,
+            "name": "Tina老师",
+            "voice_type": "zh_female_yingyujiaoyu_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 29,
+            "name": "温柔女神",
+            "voice_type": "ICL_zh_female_wenrounvshen_239eff5e8ffa_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 30,
+            "name": "Vivi",
+            "voice_type": "zh_female_vv_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 31,
+            "name": "亲切女声",
+            "voice_type": "zh_female_qinqienvsheng_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 32,
+            "name": "机灵小伙",
+            "voice_type": "ICL_zh_male_shenmi_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 33,
+            "name": "元气甜妹",
+            "voice_type": "ICL_zh_female_wuxi_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 34,
+            "name": "知心姐姐",
+            "voice_type": "ICL_zh_female_wenyinvsheng_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 35,
+            "name": "阳光阿辰",
+            "voice_type": "zh_male_qingyiyuxuan_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 36,
+            "name": "快乐小东",
+            "voice_type": "zh_male_xudong_conversation_wvae_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 37,
+            "name": "冷酷哥哥",
+            "voice_type": "ICL_zh_male_lengkugege_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 38,
+            "name": "纯澈女生",
+            "voice_type": "ICL_zh_female_feicui_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 39,
+            "name": "初恋女友",
+            "voice_type": "ICL_zh_female_yuxin_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 40,
+            "name": "贴心闺蜜",
+            "voice_type": "ICL_zh_female_xnx_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 41,
+            "name": "温柔白月光",
+            "voice_type": "ICL_zh_female_yry_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 42,
+            "name": "开朗学长",
+            "voice_type": "en_male_jason_conversation_wvae_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 43,
+            "name": "魅力苏菲",
+            "voice_type": "zh_female_sophie_conversation_wvae_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 44,
+            "name": "贴心妹妹",
+            "voice_type": "ICL_zh_female_yilin_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 45,
+            "name": "甜美桃子",
+            "voice_type": "zh_female_tianmeitaozi_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 46,
+            "name": "清新女声",
+            "voice_type": "zh_female_qingxinnvsheng_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 47,
+            "name": "知性女声",
+            "voice_type": "zh_female_zhixingnvsheng_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 48,
+            "name": "清爽男大",
+            "voice_type": "zh_male_qingshuangnanda_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 49,
+            "name": "邻家女孩",
+            "voice_type": "zh_female_linjianvhai_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 50,
+            "name": "渊博小叔",
+            "voice_type": "zh_male_yuanboxiaoshu_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 51,
+            "name": "阳光青年",
+            "voice_type": "zh_male_yangguangqingnian_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 52,
+            "name": "甜美小源",
+            "voice_type": "zh_female_tianmeixiaoyuan_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 53,
+            "name": "清澈梓梓",
+            "voice_type": "zh_female_qingchezizi_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 54,
+            "name": "解说小明",
+            "voice_type": "zh_male_jieshuoxiaoming_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 55,
+            "name": "开朗姐姐",
+            "voice_type": "zh_female_kailangjiejie_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 56,
+            "name": "邻家男孩",
+            "voice_type": "zh_male_linjiananhai_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 57,
+            "name": "甜美悦悦",
+            "voice_type": "zh_female_tianmeiyueyue_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 58,
+            "name": "心灵鸡汤",
+            "voice_type": "zh_female_xinlingjitang_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 59,
+            "name": "知性温婉",
+            "voice_type": "ICL_zh_female_zhixingwenwan_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 60,
+            "name": "暖心体贴",
+            "voice_type": "ICL_zh_male_nuanxintitie_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 61,
+            "name": "开朗轻快",
+            "voice_type": "ICL_zh_male_kailangqingkuai_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 62,
+            "name": "活泼爽朗",
+            "voice_type": "ICL_zh_male_huoposhuanglang_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 63,
+            "name": "率真小伙",
+            "voice_type": "ICL_zh_male_shuaizhenxiaohuo_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 64,
+            "name": "温柔小哥",
+            "voice_type": "zh_male_wenrouxiaoge_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 65,
+            "name": "灿灿/Shiny",
+            "voice_type": "zh_female_cancan_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 66,
+            "name": "爽快思思/Skye",
+            "voice_type": "zh_female_shuangkuaisisi_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 67,
+            "name": "温暖阿虎/Alvin",
+            "voice_type": "zh_male_wennuanahu_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 68,
+            "name": "少年梓辛/Brayan",
+            "voice_type": "zh_male_shaonianzixin_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 69,
+            "name": "温柔文雅",
+            "voice_type": "ICL_zh_female_wenrouwenya_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 70,
+            "name": "沪普男",
+            "voice_type": "zh_male_hupunan_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 71,
+            "name": "粤语小溏",
+            "voice_type": "zh_female_yueyunv_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 72,
+            "name": "鲁班七号",
+            "voice_type": "zh_male_lubanqihao_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 73,
+            "name": "林潇",
+            "voice_type": "zh_female_yangmi_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 74,
+            "name": "玲玲姐姐",
+            "voice_type": "zh_female_linzhiling_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 75,
+            "name": "春日部姐姐",
+            "voice_type": "zh_female_jiyejizi2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 76,
+            "name": "唐僧",
+            "voice_type": "zh_male_tangseng_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 77,
+            "name": "庄周",
+            "voice_type": "zh_male_zhuangzhou_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 78,
+            "name": "猪八戒",
+            "voice_type": "zh_male_zhubajie_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 79,
+            "name": "感冒电音姐姐",
+            "voice_type": "zh_female_ganmaodianyin_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 80,
+            "name": "直率英子",
+            "voice_type": "zh_female_naying_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 81,
+            "name": "女雷神",
+            "voice_type": "zh_female_leidian_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 82,
+            "name": "豫州子轩",
+            "voice_type": "zh_male_yuzhouzixuan_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 83,
+            "name": "呆萌川妹",
+            "voice_type": "zh_female_daimengchuanmei_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 84,
+            "name": "广西远舟",
+            "voice_type": "zh_male_guangxiyuanzhou_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 85,
+            "name": "双节棍小哥",
+            "voice_type": "zh_male_zhoujielun_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 86,
+            "name": "湾湾小何",
+            "voice_type": "zh_female_wanwanxiaohe_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 87,
+            "name": "湾区大叔",
+            "voice_type": "zh_female_wanqudashu_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 88,
+            "name": "广州德哥",
+            "voice_type": "zh_male_guozhoudege_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 89,
+            "name": "浩宇小哥",
+            "voice_type": "zh_male_haoyuxiaoge_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 90,
+            "name": "北京小爷",
+            "voice_type": "zh_male_beijingxiaoye_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 91,
+            "name": "京腔侃爷/Harmony",
+            "voice_type": "zh_male_jingqiangkanye_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 92,
+            "name": "妹坨洁儿",
+            "voice_type": "zh_female_meituojieer_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 93,
+            "name": "纯真少女",
+            "voice_type": "ICL_zh_female_chunzhenshaonv_e588402fb8ad_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 94,
+            "name": "奶气小生",
+            "voice_type": "ICL_zh_male_xiaonaigou_edf58cf28b8b_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 95,
+            "name": "精灵向导",
+            "voice_type": "ICL_zh_female_jinglingxiangdao_1beb294a9e3e_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 96,
+            "name": "闷油瓶小哥",
+            "voice_type": "ICL_zh_male_menyoupingxiaoge_ffed9fc2fee7_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 97,
+            "name": "黯刃秦主",
+            "voice_type": "ICL_zh_male_anrenqinzhu_cd62e63dcdab_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 98,
+            "name": "霸道总裁",
+            "voice_type": "ICL_zh_male_badaozongcai_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 99,
+            "name": "妩媚可人",
+            "voice_type": "ICL_zh_female_ganli_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 100,
+            "name": "邪魅御姐",
+            "voice_type": "ICL_zh_female_xiangliangya_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 101,
+            "name": "嚣张小哥",
+            "voice_type": "ICL_zh_male_ms_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 102,
+            "name": "油腻大叔",
+            "voice_type": "ICL_zh_male_you_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 103,
+            "name": "孤傲公子",
+            "voice_type": "ICL_zh_male_guaogongzi_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 104,
+            "name": "胡子叔叔",
+            "voice_type": "ICL_zh_male_huzi_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 105,
+            "name": "性感魅惑",
+            "voice_type": "ICL_zh_female_luoqing_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 106,
+            "name": "病弱公子",
+            "voice_type": "ICL_zh_male_bingruogongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 107,
+            "name": "邪魅女王",
+            "voice_type": "ICL_zh_female_bingjiao3_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 108,
+            "name": "傲慢青年",
+            "voice_type": "ICL_zh_male_aomanqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 109,
+            "name": "醋精男生",
+            "voice_type": "ICL_zh_male_cujingnansheng_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 110,
+            "name": "爽朗少年",
+            "voice_type": "ICL_zh_male_shuanglangshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 111,
+            "name": "撒娇男友",
+            "voice_type": "ICL_zh_male_sajiaonanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 112,
+            "name": "温柔男友",
+            "voice_type": "ICL_zh_male_wenrounanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 113,
+            "name": "温顺少年",
+            "voice_type": "ICL_zh_male_wenshunshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 114,
+            "name": "粘人男友",
+            "voice_type": "ICL_zh_male_naigounanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 115,
+            "name": "撒娇男生",
+            "voice_type": "ICL_zh_male_sajiaonansheng_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 116,
+            "name": "活泼男友",
+            "voice_type": "ICL_zh_male_huoponanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 117,
+            "name": "甜系男友",
+            "voice_type": "ICL_zh_male_tianxinanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 118,
+            "name": "活力青年",
+            "voice_type": "ICL_zh_male_huoliqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 119,
+            "name": "开朗青年",
+            "voice_type": "ICL_zh_male_kailangqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 120,
+            "name": "冷漠兄长",
+            "voice_type": "ICL_zh_male_lengmoxiongzhang_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 121,
+            "name": "天才同桌",
+            "voice_type": "ICL_zh_male_tiancaitongzhuo_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 122,
+            "name": "翩翩公子",
+            "voice_type": "ICL_zh_male_pianpiangongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 123,
+            "name": "懵懂青年",
+            "voice_type": "ICL_zh_male_mengdongqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 124,
+            "name": "冷脸兄长",
+            "voice_type": "ICL_zh_male_lenglianxiongzhang_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 125,
+            "name": "病娇少年",
+            "voice_type": "ICL_zh_male_bingjiaoshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 126,
+            "name": "病娇男友",
+            "voice_type": "ICL_zh_male_bingjiaonanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 127,
+            "name": "病弱少年",
+            "voice_type": "ICL_zh_male_bingruoshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 128,
+            "name": "意气少年",
+            "voice_type": "ICL_zh_male_yiqishaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 129,
+            "name": "干净少年",
+            "voice_type": "ICL_zh_male_ganjingshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 130,
+            "name": "冷漠男友",
+            "voice_type": "ICL_zh_male_lengmonanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 131,
+            "name": "精英青年",
+            "voice_type": "ICL_zh_male_jingyingqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 132,
+            "name": "热血少年",
+            "voice_type": "ICL_zh_male_rexueshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 133,
+            "name": "清爽少年",
+            "voice_type": "ICL_zh_male_qingshuangshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 134,
+            "name": "中二青年",
+            "voice_type": "ICL_zh_male_zhongerqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 135,
+            "name": "凌云青年",
+            "voice_type": "ICL_zh_male_lingyunqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 136,
+            "name": "自负青年",
+            "voice_type": "ICL_zh_male_zifuqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 137,
+            "name": "不羁青年",
+            "voice_type": "ICL_zh_male_bujiqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 138,
+            "name": "儒雅君子",
+            "voice_type": "ICL_zh_male_ruyajunzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 139,
+            "name": "低音沉郁",
+            "voice_type": "ICL_zh_male_diyinchenyu_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 140,
+            "name": "冷脸学霸",
+            "voice_type": "ICL_zh_male_lenglianxueba_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 141,
+            "name": "儒雅总裁",
+            "voice_type": "ICL_zh_male_ruyazongcai_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 142,
+            "name": "深沉总裁",
+            "voice_type": "ICL_zh_male_shenchenzongcai_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 143,
+            "name": "小侯爷",
+            "voice_type": "ICL_zh_male_xiaohouye_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 144,
+            "name": "孤高公子",
+            "voice_type": "ICL_zh_male_gugaogongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 145,
+            "name": "仗剑君子",
+            "voice_type": "ICL_zh_male_zhangjianjunzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 146,
+            "name": "温润学者",
+            "voice_type": "ICL_zh_male_wenrunxuezhe_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 147,
+            "name": "亲切青年",
+            "voice_type": "ICL_zh_male_qinqieqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 148,
+            "name": "温柔学长",
+            "voice_type": "ICL_zh_male_wenrouxuezhang_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 149,
+            "name": "高冷总裁",
+            "voice_type": "ICL_zh_male_gaolengzongcai_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 150,
+            "name": "冷峻高智",
+            "voice_type": "ICL_zh_male_lengjungaozhi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 151,
+            "name": "孱弱少爷",
+            "voice_type": "ICL_zh_male_chanruoshaoye_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 152,
+            "name": "自信青年",
+            "voice_type": "ICL_zh_male_zixinqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 153,
+            "name": "青涩青年",
+            "voice_type": "ICL_zh_male_qingseqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 154,
+            "name": "学霸同桌",
+            "voice_type": "ICL_zh_male_xuebatongzhuo_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 155,
+            "name": "冷傲总裁",
+            "voice_type": "ICL_zh_male_lengaozongcai_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 156,
+            "name": "元气少年",
+            "voice_type": "ICL_zh_male_yuanqishaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 157,
+            "name": "洒脱青年",
+            "voice_type": "ICL_zh_male_satuoqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 158,
+            "name": "直率青年",
+            "voice_type": "ICL_zh_male_zhishuaiqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 159,
+            "name": "斯文青年",
+            "voice_type": "ICL_zh_male_siwenqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 160,
+            "name": "俊逸公子",
+            "voice_type": "ICL_zh_male_junyigongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 161,
+            "name": "仗剑侠客",
+            "voice_type": "ICL_zh_male_zhangjianxiake_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 162,
+            "name": "机甲智能",
+            "voice_type": "ICL_zh_male_jijiaozhineng_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 163,
+            "name": "奶气萌娃",
+            "voice_type": "zh_male_naiqimengwa_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 164,
+            "name": "婆婆",
+            "voice_type": "zh_female_popo_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 165,
+            "name": "高冷御姐",
+            "voice_type": "zh_female_gaolengyujie_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 166,
+            "name": "傲娇霸总",
+            "voice_type": "zh_male_aojiaobazong_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 167,
+            "name": "魅力女友",
+            "voice_type": "zh_female_meilinvyou_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 168,
+            "name": "深夜播客",
+            "voice_type": "zh_male_shenyeboke_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 169,
+            "name": "柔美女友",
+            "voice_type": "zh_female_sajiaonvyou_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 170,
+            "name": "撒娇学妹",
+            "voice_type": "zh_female_yuanqinvyou_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 171,
+            "name": "病弱少女",
+            "voice_type": "ICL_zh_female_bingruoshaonv_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 172,
+            "name": "活泼女孩",
+            "voice_type": "ICL_zh_female_huoponvhai_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 173,
+            "name": "东方浩然",
+            "voice_type": "zh_male_dongfanghaoran_moon_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 174,
+            "name": "绿茶小哥",
+            "voice_type": "ICL_zh_male_lvchaxiaoge_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 175,
+            "name": "娇弱萝莉",
+            "voice_type": "ICL_zh_female_jiaoruoluoli_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 176,
+            "name": "冷淡疏离",
+            "voice_type": "ICL_zh_male_lengdanshuli_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 177,
+            "name": "憨厚敦实",
+            "voice_type": "ICL_zh_male_hanhoudunshi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 178,
+            "name": "活泼刁蛮",
+            "voice_type": "ICL_zh_female_huopodiaoman_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 179,
+            "name": "固执病娇",
+            "voice_type": "ICL_zh_male_guzhibingjiao_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 180,
+            "name": "撒娇粘人",
+            "voice_type": "ICL_zh_male_sajiaonianren_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 181,
+            "name": "傲慢娇声",
+            "voice_type": "ICL_zh_female_aomanjiaosheng_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 182,
+            "name": "潇洒随性",
+            "voice_type": "ICL_zh_male_xiaosasuixing_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 183,
+            "name": "诡异神秘",
+            "voice_type": "ICL_zh_male_guiyishenmi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 184,
+            "name": "儒雅才俊",
+            "voice_type": "ICL_zh_male_ruyacaijun_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 185,
+            "name": "正直青年",
+            "voice_type": "ICL_zh_male_zhengzhiqingnian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 186,
+            "name": "娇憨女王",
+            "voice_type": "ICL_zh_female_jiaohannvwang_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 187,
+            "name": "病娇萌妹",
+            "voice_type": "ICL_zh_female_bingjiaomengmei_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 188,
+            "name": "青涩小生",
+            "voice_type": "ICL_zh_male_qingsenaigou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 189,
+            "name": "纯真学弟",
+            "voice_type": "ICL_zh_male_chunzhenxuedi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 190,
+            "name": "优柔帮主",
+            "voice_type": "ICL_zh_male_youroubangzhu_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 191,
+            "name": "优柔公子",
+            "voice_type": "ICL_zh_male_yourougongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 192,
+            "name": "调皮公主",
+            "voice_type": "ICL_zh_female_tiaopigongzhu_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 193,
+            "name": "贴心男友",
+            "voice_type": "ICL_zh_male_tiexinnanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 194,
+            "name": "少年将军",
+            "voice_type": "ICL_zh_male_shaonianjiangjun_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 195,
+            "name": "病娇哥哥",
+            "voice_type": "ICL_zh_male_bingjiaogege_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 196,
+            "name": "学霸男同桌",
+            "voice_type": "ICL_zh_male_xuebanantongzhuo_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 197,
+            "name": "幽默叔叔",
+            "voice_type": "ICL_zh_male_youmoshushu_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 198,
+            "name": "假小子",
+            "voice_type": "ICL_zh_female_jiaxiaozi_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 199,
+            "name": "温柔男同桌",
+            "voice_type": "ICL_zh_male_wenrounantongzhuo_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 200,
+            "name": "幽默大爷",
+            "voice_type": "ICL_zh_male_youmodaye_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 201,
+            "name": "枕边低语",
+            "voice_type": "ICL_zh_male_asmryexiu_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 202,
+            "name": "神秘法师",
+            "voice_type": "ICL_zh_male_shenmifashi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 203,
+            "name": "娇喘女声",
+            "voice_type": "zh_female_jiaochuan_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 204,
+            "name": "开朗弟弟",
+            "voice_type": "zh_male_livelybro_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 205,
+            "name": "谄媚女声",
+            "voice_type": "zh_female_flattery_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 206,
+            "name": "冷峻上司",
+            "voice_type": "ICL_zh_male_lengjunshangsi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 207,
+            "name": "醋精男友",
+            "voice_type": "ICL_zh_male_cujingnanyou_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 208,
+            "name": "风发少年",
+            "voice_type": "ICL_zh_male_fengfashaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 209,
+            "name": "磁性男嗓",
+            "voice_type": "ICL_zh_male_cixingnansang_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 210,
+            "name": "成熟总裁",
+            "voice_type": "ICL_zh_male_chengshuzongcai_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 211,
+            "name": "傲娇精英",
+            "voice_type": "ICL_zh_male_aojiaojingying_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 212,
+            "name": "傲娇公子",
+            "voice_type": "ICL_zh_male_aojiaogongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 213,
+            "name": "霸道少爷",
+            "voice_type": "ICL_zh_male_badaoshaoye_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 214,
+            "name": "腹黑公子",
+            "voice_type": "ICL_zh_male_fuheigongzi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 215,
+            "name": "暖心学姐",
+            "voice_type": "ICL_zh_female_nuanxinxuejie_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 216,
+            "name": "可爱女生",
+            "voice_type": "ICL_zh_female_keainvsheng_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 217,
+            "name": "成熟姐姐",
+            "voice_type": "ICL_zh_female_chengshujiejie_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 218,
+            "name": "病娇姐姐",
+            "voice_type": "ICL_zh_female_bingjiaojiejie_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 219,
+            "name": "妩媚御姐",
+            "voice_type": "ICL_zh_female_wumeiyujie_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 220,
+            "name": "傲娇女友",
+            "voice_type": "ICL_zh_female_aojiaonvyou_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 221,
+            "name": "贴心女友",
+            "voice_type": "ICL_zh_female_tiexinnvyou_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 222,
+            "name": "性感御姐",
+            "voice_type": "ICL_zh_female_xingganyujie_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 223,
+            "name": "病娇弟弟",
+            "voice_type": "ICL_zh_male_bingjiaodidi_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 224,
+            "name": "傲慢少爷",
+            "voice_type": "ICL_zh_male_aomanshaoye_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 225,
+            "name": "傲气凌人",
+            "voice_type": "ICL_zh_male_aiqilingren_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 226,
+            "name": "病娇白莲",
+            "voice_type": "ICL_zh_male_bingjiaobailian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 227,
+            "name": "理性圆子",
+            "voice_type": "ICL_zh_female_lixingyuanzi_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 228,
+            "name": "清甜桃桃",
+            "voice_type": "ICL_zh_female_qingtiantaotao_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 229,
+            "name": "清晰小雪",
+            "voice_type": "ICL_zh_female_qingxixiaoxue_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 230,
+            "name": "清甜莓莓",
+            "voice_type": "ICL_zh_female_qingtianmeimei_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 231,
+            "name": "开朗婷婷",
+            "voice_type": "ICL_zh_female_kailangtingting_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 232,
+            "name": "清新沐沐",
+            "voice_type": "ICL_zh_male_qingxinmumu_cs_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 233,
+            "name": "爽朗小阳",
+            "voice_type": "ICL_zh_male_shuanglangxiaoyang_cs_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 234,
+            "name": "清新波波",
+            "voice_type": "ICL_zh_male_qingxinbobo_cs_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 235,
+            "name": "温婉珊珊",
+            "voice_type": "ICL_zh_female_wenwanshanshan_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 236,
+            "name": "甜美小雨",
+            "voice_type": "ICL_zh_female_tianmeixiaoyu_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 237,
+            "name": "热情艾娜",
+            "voice_type": "ICL_zh_female_reqingaina_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 238,
+            "name": "甜美小橘",
+            "voice_type": "ICL_zh_female_tianmeixiaoju_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 239,
+            "name": "沉稳明仔",
+            "voice_type": "ICL_zh_male_chenwenmingzai_cs_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 240,
+            "name": "亲切小卓",
+            "voice_type": "ICL_zh_male_qinqiexiaozhuo_cs_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 241,
+            "name": "灵动欣欣",
+            "voice_type": "ICL_zh_female_lingdongxinxin_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 242,
+            "name": "乖巧可儿",
+            "voice_type": "ICL_zh_female_guaiqiaokeer_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 243,
+            "name": "暖心茜茜",
+            "voice_type": "ICL_zh_female_nuanxinqianqian_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 244,
+            "name": "软萌团子",
+            "voice_type": "ICL_zh_female_ruanmengtuanzi_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 245,
+            "name": "阳光洋洋",
+            "voice_type": "ICL_zh_male_yangguangyangyang_cs_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 246,
+            "name": "软萌糖糖",
+            "voice_type": "ICL_zh_female_ruanmengtangtang_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 247,
+            "name": "秀丽倩倩",
+            "voice_type": "ICL_zh_female_xiuliqianqian_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 248,
+            "name": "开心小鸿",
+            "voice_type": "ICL_zh_female_kaixinxiaohong_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 249,
+            "name": "轻盈朵朵",
+            "voice_type": "ICL_zh_female_qingyingduoduo_cs_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 250,
+            "name": "暖阳女声",
+            "voice_type": "zh_female_kefunvsheng_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 251,
+            "name": "悠悠君子",
+            "voice_type": "zh_male_M100_conversation_wvae_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 252,
+            "name": "文静毛毛",
+            "voice_type": "zh_female_maomao_conversation_wvae_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 253,
+            "name": "倾心少女",
+            "voice_type": "ICL_zh_female_qiuling_v1_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 254,
+            "name": "醇厚低音",
+            "voice_type": "ICL_zh_male_buyan_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 255,
+            "name": "咆哮小哥",
+            "voice_type": "ICL_zh_male_BV144_paoxiaoge_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 256,
+            "name": "和蔼奶奶",
+            "voice_type": "ICL_zh_female_heainainai_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 257,
+            "name": "邻居阿姨",
+            "voice_type": "ICL_zh_female_linjuayi_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 258,
+            "name": "温柔小雅",
+            "voice_type": "zh_female_wenrouxiaoya_moon_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 259,
+            "name": "天才童声",
+            "voice_type": "zh_male_tiancaitongsheng_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 260,
+            "name": "猴哥",
+            "voice_type": "zh_male_sunwukong_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 261,
+            "name": "熊二",
+            "voice_type": "zh_male_xionger_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 262,
+            "name": "佩奇猪",
+            "voice_type": "zh_female_peiqi_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 263,
+            "name": "武则天",
+            "voice_type": "zh_female_wuzetian_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 264,
+            "name": "顾姐",
+            "voice_type": "zh_female_gujie_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 265,
+            "name": "樱桃丸子",
+            "voice_type": "zh_female_yingtaowanzi_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 266,
+            "name": "广告解说",
+            "voice_type": "zh_male_chunhui_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 267,
+            "name": "少儿故事",
+            "voice_type": "zh_female_shaoergushi_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 268,
+            "name": "四郎",
+            "voice_type": "zh_male_silang_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 269,
+            "name": "俏皮女声",
+            "voice_type": "zh_female_qiaopinvsheng_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 270,
+            "name": "懒音绵宝",
+            "voice_type": "zh_male_lanxiaoyang_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 271,
+            "name": "亮嗓萌仔",
+            "voice_type": "zh_male_dongmanhaimian_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 272,
+            "name": "磁性解说男声/Morgan",
+            "voice_type": "zh_male_jieshuonansheng_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 273,
+            "name": "鸡汤妹妹/Hope",
+            "voice_type": "zh_female_jitangmeimei_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 274,
+            "name": "贴心女声/Candy",
+            "voice_type": "zh_female_tiexinnvsheng_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 275,
+            "name": "萌丫头/Cutey",
+            "voice_type": "zh_female_mengyatou_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 276,
+            "name": "内敛才俊",
+            "voice_type": "ICL_zh_male_neiliancaijun_e991be511569_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 277,
+            "name": "温暖少年",
+            "voice_type": "ICL_zh_male_yangyang_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 278,
+            "name": "儒雅公子",
+            "voice_type": "ICL_zh_male_flc_v1_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 279,
+            "name": "悬疑解说",
+            "voice_type": "zh_male_changtianyi_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 280,
+            "name": "儒雅青年",
+            "voice_type": "zh_male_ruyaqingnian_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 281,
+            "name": "霸气青叔",
+            "voice_type": "zh_male_baqiqingshu_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 282,
+            "name": "擎苍",
+            "voice_type": "zh_male_qingcang_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 283,
+            "name": "活力小哥",
+            "voice_type": "zh_male_yangguangqingnian_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 284,
+            "name": "古风少御",
+            "voice_type": "zh_female_gufengshaoyu_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 285,
+            "name": "温柔淑女",
+            "voice_type": "zh_female_wenroushunv_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 286,
+            "name": "反卷青年",
+            "voice_type": "zh_male_fanjuanqingnian_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
         }
     ]
 }
