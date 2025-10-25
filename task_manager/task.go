@@ -13,7 +13,7 @@ import (
 )
 
 // PlayEventTasks 处理事件任务：从task_manager获取文本、调用LLM、生成语音、播报
-func PlayEventTasks(ctx context.Context) {
+func PlayEventTasks(ctx context.Context, voice *config.Voice) {
 	// 检查是否有正在运行的任务
 	if !IsTaskRunning() {
 		logger.Warn("PlayEventTasks: 没有正在运行的任务")
@@ -66,7 +66,7 @@ func PlayEventTasks(ctx context.Context) {
 	}
 
 	// 4. 将大模型返回的内容转换为语音
-	audioData, err := generateSpeech(llmResponse)
+	audioData, err := generateSpeech(llmResponse, voice)
 	if err != nil {
 		logger.Error("PlayEventTasks: 语音生成失败", "error", err)
 		return
@@ -153,15 +153,8 @@ func callLLMStream(ctx context.Context, prompt string) (string, error) {
 }
 
 // generateSpeech 生成语音
-func generateSpeech(text string) ([]byte, error) {
-	// 获取随机音色
-	voice := config.GetVoiceByID(86)
-	if voice == nil {
-		return nil, fmt.Errorf("无法获取音色配置")
-	}
-
-	logger.Info("generateSpeech: 使用音色", "voice_name", voice.Name)
-
+func generateSpeech(text string, voice *config.Voice) ([]byte, error) {
+	logger.Info("generateSpeech: 使用音色", "voice_type", voice.Name, "voice_id", voice.ID)
 	// 调用TTS API生成语音
 	ttsResult, err := tts_api.GenerateSpeech(text, voice)
 	if err != nil {

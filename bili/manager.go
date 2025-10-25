@@ -287,10 +287,10 @@ func (am *AppManager) startEventDrivenTaskProcessor() {
 	am.wg.Add(1)
 	go func() {
 		defer am.wg.Done()
-		
+
 		logger.Info("事件驱动任务处理器已启动")
 		taskNotify := task_manager.GetTaskNotifyChannel()
-		
+
 		for {
 			select {
 			case <-am.ctx.Done():
@@ -315,11 +315,11 @@ func (am *AppManager) processTaskLoop() {
 			return
 		default:
 		}
-		
+
 		// 检查是否有任务需要处理
 		if task_manager.IsTaskRunning() {
 			logger.Info("检测到有任务需要处理，开始执行...")
-			task_manager.PlayEventTasks(am.ctx)
+			task_manager.PlayEventTasks(am.ctx, config.GetRandomVoice())
 			// PlayEventTasks 完成后，立即检查是否还有新任务
 			logger.Info("任务执行完成，检查是否有新任务...")
 		} else {

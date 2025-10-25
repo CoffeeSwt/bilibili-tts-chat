@@ -11,6 +11,8 @@ config.yaml
 bilibili-tts-chat
 bilibili-tts-chat.exe
 
+/logs
+
 # 测试文件
 *.test
 
