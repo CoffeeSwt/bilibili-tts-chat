@@ -1,0 +1,102 @@
+{
+    "voices": [
+        {
+            "id": 1,
+            "name": "vivi",
+            "voice_type": "zh_female_vv_uranus_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 2,
+            "name": "大壹",
+            "voice_type": "zh_male_dayi_saturn_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 3,
+            "name": "黑猫侦探社咪仔",
+            "voice_type": "zh_female_mizai_saturn_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 4,
+            "name": "鸡汤女",
+            "voice_type": "zh_female_jitangnv_saturn_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 5,
+            "name": "魅力女友",
+            "voice_type": "zh_female_meilinvyou_saturn_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 6,
+            "name": "流畅女声",
+            "voice_type": "zh_female_santongyongns_saturn_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 7,
+            "name": "儒雅逸辰",
+            "voice_type": "zh_male_ruyayichen_saturn_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 8,
+            "name": "调皮公主",
+            "voice_type": "saturn_zh_female_tiaopigongzhu_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 9,
+            "name": "爽朗少年",
+            "voice_type": "saturn_zh_male_shuanglangshaonian_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 10,
+            "name": "天才同桌",
+            "voice_type": "saturn_zh_male_tiancaitongzhuo_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 11,
+            "name": "可爱女生",
+            "voice_type": "saturn_zh_female_keainvsheng_tob",
+            "gender": "female",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 12,
+            "name": "知性灿灿",
+            "voice_type": "saturn_zh_female_cancan_tob",
+            "gender": "male",
+            "api_resource_id": "seed-tts-2.0"
+        },
+        {
+            "id": 13,
+            "name": "冷酷哥哥",
+            "voice_type": "zh_male_lengkugege_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 14,
+            "name": "甜心小美",
+            "voice_type": "zh_female_tianxinxiaomei_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        }
+    ]
+}

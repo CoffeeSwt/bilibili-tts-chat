@@ -1,0 +1,18 @@
+{
+    "voices": [
+        {
+            "id": 13,
+            "name": "冷酷哥哥",
+            "voice_type": "zh_male_lengkugege_emo_v2_mars_bigtts",
+            "gender": "male",
+            "api_resource_id": "seed-tts-1.0"
+        },
+        {
+            "id": 14,
+            "name": "甜心小美",
+            "voice_type": "zh_female_tianxinxiaomei_emo_v2_mars_bigtts",
+            "gender": "female",
+            "api_resource_id": "seed-tts-1.0"
+        }
+    ]
+}

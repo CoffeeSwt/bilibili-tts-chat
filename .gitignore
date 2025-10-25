@@ -17,6 +17,7 @@ bilibili-tts-chat.exe
 # 输出目录
 /dist/
 /build/
+/tts_api/api_test/output/
 
 # 依赖目录
 vendor/
