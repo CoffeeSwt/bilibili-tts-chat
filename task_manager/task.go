@@ -155,7 +155,7 @@ func callLLMStream(ctx context.Context, prompt string) (string, error) {
 // generateSpeech 生成语音
 func generateSpeech(text string) ([]byte, error) {
 	// 获取随机音色
-	voice := config.GetRandomVoice()
+	voice := config.GetVoiceByID(86)
 	if voice == nil {
 		return nil, fmt.Errorf("无法获取音色配置")
 	}
