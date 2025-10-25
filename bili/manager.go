@@ -13,6 +13,7 @@ import (
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
+	"github.com/CoffeeSwt/bilibili-tts-chat/task_manager"
 )
 
 // AppManager 应用管理器，封装所有B站相关的逻辑
@@ -106,6 +107,9 @@ func (am *AppManager) Start() error {
 	if err := am.startWebSocket(startAppResp); err != nil {
 		return fmt.Errorf("启动WebSocket连接失败: %w", err)
 	}
+
+	// 启动事件驱动任务处理器
+	am.startEventDrivenTaskProcessor()
 
 	am.isRunning = true
 	logger.Info("应用管理器启动成功")
@@ -276,4 +280,52 @@ func (am *AppManager) EndApp(gameId string, appId int64) (resp BaseResp, err err
 	}
 	reqJson, _ := json.Marshal(endAppReq)
 	return ApiRequest(string(reqJson), "/v2/app/end")
+}
+
+// startEventDrivenTaskProcessor 启动事件驱动任务处理器
+func (am *AppManager) startEventDrivenTaskProcessor() {
+	am.wg.Add(1)
+	go func() {
+		defer am.wg.Done()
+		
+		logger.Info("事件驱动任务处理器已启动")
+		taskNotify := task_manager.GetTaskNotifyChannel()
+		
+		for {
+			select {
+			case <-am.ctx.Done():
+				logger.Info("事件驱动任务处理器收到停止信号，正在退出...")
+				return
+			case <-taskNotify:
+				// 收到任务通知，开始处理循环
+				logger.Info("收到任务通知，开始处理任务...")
+				am.processTaskLoop()
+			}
+		}
+	}()
+}
+
+// processTaskLoop 处理任务循环
+func (am *AppManager) processTaskLoop() {
+	for {
+		// 检查上下文是否已取消
+		select {
+		case <-am.ctx.Done():
+			logger.Info("任务处理循环收到停止信号，正在退出...")
+			return
+		default:
+		}
+		
+		// 检查是否有任务需要处理
+		if task_manager.IsTaskRunning() {
+			logger.Info("检测到有任务需要处理，开始执行...")
+			task_manager.PlayEventTasks(am.ctx)
+			// PlayEventTasks 完成后，立即检查是否还有新任务
+			logger.Info("任务执行完成，检查是否有新任务...")
+		} else {
+			// 没有任务了，退出循环等待下一个通知
+			logger.Info("没有更多任务，等待下一个通知...")
+			break
+		}
+	}
 }

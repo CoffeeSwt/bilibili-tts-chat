@@ -19,12 +19,15 @@ const (
 
 // EnvConfig 配置管理结构体
 type EnvConfig struct {
-	Mode              Mode   `json:"mode"`                 //运行模式，可选值：dev, release
-	TTS_XApiAppID     string `json:"tts_x_api_app_id"`     //火山引擎TTS服务的App ID
-	TTS_XApiAccessKey string `json:"tts_x_api_access_key"` //火山引擎TTS服务的Access Key
-	BiliAppID         string `json:"bili_app_id"`          //B站开放平台App ID
-	BiliAccessKey     string `json:"bili_access_key"`      //B站开放平台Access Key
-	BiliSecretKey     string `json:"bili_secret_key"`      //B站开放平台Access Key Secret
+	Mode                Mode   `json:"mode"`                   //运行模式，可选值：dev, release
+	TTS_XApiAppID       string `json:"tts_x_api_app_id"`       //火山引擎TTS服务的App ID
+	TTS_XApiAccessKey   string `json:"tts_x_api_access_key"`   //火山引擎TTS服务的Access Key
+	BiliAppID           string `json:"bili_app_id"`            //B站开放平台App ID
+	BiliAccessKey       string `json:"bili_access_key"`        //B站开放平台Access Key
+	BiliSecretKey       string `json:"bili_secret_key"`        //B站开放平台Access Key Secret
+	LLMMockEnabled      bool   `json:"llm_mock_enabled"`       //是否启用LLM Mock模式，用于测试
+	LLMVolcengineAPIKey string `json:"llm_volcengine_api_key"` //火山引擎LLM服务的API Key
+	LLMVolcengineModel  string `json:"llm_volcengine_model"`   //火山引擎LLM服务的模型名称
 }
 
 // 全局配置实例
@@ -110,12 +113,15 @@ func loadEnvConfig() {
 
 	// 创建配置实例
 	envConfig = &EnvConfig{
-		Mode:              getWithDefault(envMap, "mode", Dev),
-		TTS_XApiAppID:     getWithDefault(envMap, "tts_x_api_app_id", ""),
-		TTS_XApiAccessKey: getWithDefault(envMap, "tts_x_api_access_key", ""),
-		BiliAppID:         getWithDefault(envMap, "bili_app_id", ""),
-		BiliAccessKey:     getWithDefault(envMap, "bili_access_key", ""),
-		BiliSecretKey:     getWithDefault(envMap, "bili_secret_key", ""),
+		Mode:                getWithDefault(envMap, "mode", Dev),
+		TTS_XApiAppID:       getWithDefault(envMap, "tts_x_api_app_id", ""),
+		TTS_XApiAccessKey:   getWithDefault(envMap, "tts_x_api_access_key", ""),
+		BiliAppID:           getWithDefault(envMap, "bili_app_id", ""),
+		BiliAccessKey:       getWithDefault(envMap, "bili_access_key", ""),
+		BiliSecretKey:       getWithDefault(envMap, "bili_secret_key", ""),
+		LLMMockEnabled:      getWithDefault(envMap, "llm_mock_enabled", false),
+		LLMVolcengineAPIKey: getWithDefault(envMap, "llm_volcengine_api_key", ""),
+		LLMVolcengineModel:  getWithDefault(envMap, "llm_volcengine_model", ""),
 	}
 }
 
@@ -156,4 +162,19 @@ func GetBiliAccessKey() string {
 
 func GetBiliSecretKey() string {
 	return GetEnvConfig().BiliSecretKey
+}
+
+// GetLLMMockEnabled 获取LLM Mock模式配置
+func GetLLMMockEnabled() bool {
+	return GetEnvConfig().LLMMockEnabled
+}
+
+// GetLLMVolcengineAPIKey 获取火山引擎LLM服务的API Key
+func GetLLMVolcengineAPIKey() string {
+	return GetEnvConfig().LLMVolcengineAPIKey
+}
+
+// GetLLMVolcengineModel 获取火山引擎LLM服务的模型名称
+func GetLLMVolcengineModel() string {
+	return GetEnvConfig().LLMVolcengineModel
 }

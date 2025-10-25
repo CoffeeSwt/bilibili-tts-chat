@@ -1,4 +1,4 @@
-package manager
+package task_manager
 
 import (
 	"context"
@@ -12,11 +12,20 @@ import (
 	"github.com/CoffeeSwt/bilibili-tts-chat/voice"
 )
 
-// PlayEventTasks 处理事件任务：收集文本、调用LLM、生成语音、播报
-func PlayEventTasks(ctx context.Context, texts []string) {
+// PlayEventTasks 处理事件任务：从task_manager获取文本、调用LLM、生成语音、播报
+func PlayEventTasks(ctx context.Context) {
+	// 检查是否有正在运行的任务
+	if !IsTaskRunning() {
+		logger.Warn("PlayEventTasks: 没有正在运行的任务")
+		return
+	}
+
+	// 从task_manager获取文本并完成任务
+	texts := CompleteTask()
+
 	// 参数验证
 	if len(texts) == 0 {
-		logger.Warn("PlayEventTasks: 输入文本列表为空")
+		logger.Warn("PlayEventTasks: 从任务管理器获取的文本列表为空")
 		return
 	}
 
@@ -85,11 +94,6 @@ func PlayEventTasks(ctx context.Context, texts []string) {
 
 // callLLMStream 调用LLM流式对话并收集完整响应
 func callLLMStream(ctx context.Context, prompt string) (string, error) {
-	// 检查LLM客户端是否就绪
-	if !llm.IsReady() {
-		return "", fmt.Errorf("LLM客户端未就绪")
-	}
-
 	// 构建消息
 	messages := []llm.Message{
 		{
@@ -98,10 +102,26 @@ func callLLMStream(ctx context.Context, prompt string) (string, error) {
 		},
 	}
 
-	// 调用流式对话
-	responseChan, err := llm.ChatStream(messages)
-	if err != nil {
-		return "", fmt.Errorf("启动流式对话失败: %v", err)
+	var responseChan <-chan llm.StreamResponse
+	var err error
+
+	// 检查是否启用Mock模式
+	if config.GetLLMMockEnabled() {
+		// Mock模式下直接调用模拟函数，不需要检查客户端就绪状态
+		responseChan, err = llm.ChatStreamWithMock(messages)
+		if err != nil {
+			return "", fmt.Errorf("启动模拟流式对话失败: %v", err)
+		}
+	} else {
+		// 非Mock模式下检查LLM客户端是否就绪
+		if !llm.IsReady() {
+			return "", fmt.Errorf("LLM客户端未就绪")
+		}
+		// 调用真实的LLM流式对话
+		responseChan, err = llm.ChatStream(messages)
+		if err != nil {
+			return "", fmt.Errorf("启动流式对话失败: %v", err)
+		}
 	}
 
 	// 收集流式响应

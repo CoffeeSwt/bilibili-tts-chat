@@ -6,6 +6,7 @@ import (
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 	"github.com/CoffeeSwt/bilibili-tts-chat/response"
+	"github.com/CoffeeSwt/bilibili-tts-chat/task_manager"
 )
 
 // HandleLike 处理点赞消息
@@ -19,6 +20,15 @@ func HandleLike(cmdData []byte) error {
 
 	logger.Info(fmt.Sprintf("[点赞] 用户: %s, 点赞数: %d, 房间: %d",
 		msg.Data.UName, msg.Data.LikeCount, msg.Data.RoomID))
+
+	// 构建结构化的事件描述，方便AI理解和回复
+	eventDescription := fmt.Sprintf("【点赞】用户 %s 为直播间点了 %d 个赞", 
+		msg.Data.UName, msg.Data.LikeCount)
+
+	// 将事件描述添加到任务管理器
+	if err := task_manager.AddText(eventDescription); err != nil {
+		logger.Error(fmt.Sprintf("[LikeHandler] 添加事件到任务管理器失败: %v", err))
+	}
 
 	return nil
 }

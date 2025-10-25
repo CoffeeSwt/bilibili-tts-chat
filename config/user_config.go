@@ -9,7 +9,8 @@ import (
 )
 
 type UserConfig struct {
-	RoomIDCode string `json:"room_id_code"` // 直播间身份码
+	RoomIDCode      string `json:"room_id_code"`     // 直播间身份码
+	RoomDescription string `json:"room_description"` // 直播间描述 //用于为主播定制上下文，例如主播叫什么，正在播什么，喜欢什么，擅长什么，有什么特点
 }
 
 // 全局配置实例
@@ -56,4 +57,8 @@ func GetUserConfig() *UserConfig {
 
 func GetRoomIDCode() string {
 	return GetUserConfig().RoomIDCode
+}
+
+func GetRoomDescription() string {
+	return GetUserConfig().RoomDescription
 }

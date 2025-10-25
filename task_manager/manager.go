@@ -30,6 +30,7 @@ type TaskManager struct {
 	currentTask *TaskInfo    // 当前任务信息
 	textWindow  []string     // 文本窗口
 	taskCounter int          // 任务计数器，用于生成任务ID
+	taskNotify  chan struct{} // 任务通知通道
 }
 
 var (
@@ -45,6 +46,7 @@ func GetInstance() *TaskManager {
 			currentTask: nil,
 			textWindow:  make([]string, 0),
 			taskCounter: 0,
+			taskNotify:  make(chan struct{}, 1), // 缓冲通道，避免阻塞
 		}
 		logger.Info("任务管理器初始化完成")
 	})
@@ -64,6 +66,12 @@ func (tm *TaskManager) AddText(text string) error {
 	// 检查是否需要开始新任务
 	if tm.status == TaskStatusIdle && len(tm.textWindow) == 0 {
 		tm.startNewTask()
+		// 发送任务通知
+		select {
+		case tm.taskNotify <- struct{}{}:
+		default:
+			// 通道已满，忽略
+		}
 	}
 
 	// 添加文本到窗口
@@ -261,4 +269,9 @@ func GetWindowSize() int {
 // GetStats 获取统计信息
 func GetStats() map[string]interface{} {
 	return GetInstance().GetStats()
+}
+
+// GetTaskNotifyChannel 获取任务通知通道
+func GetTaskNotifyChannel() <-chan struct{} {
+	return GetInstance().taskNotify
 }
