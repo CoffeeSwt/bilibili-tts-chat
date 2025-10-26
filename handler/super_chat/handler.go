@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 	"github.com/CoffeeSwt/bilibili-tts-chat/response"
 	"github.com/CoffeeSwt/bilibili-tts-chat/task_manager"
@@ -22,11 +23,11 @@ func HandleSuperChat(cmdData []byte) error {
 		msg.Data.UName, msg.Data.Message, msg.Data.RMB, msg.Data.RoomID))
 
 	// 构建结构化的事件描述，方便AI理解和回复
-	eventDescription := fmt.Sprintf("【付费留言】用户 %s 发送了 %d元 的付费留言：%s", 
+	eventDescription := fmt.Sprintf("【付费留言】用户 %s 发送了 %d元 的付费留言：%s",
 		msg.Data.UName, msg.Data.RMB, msg.Data.Message)
 
 	// 将事件描述添加到任务管理器
-	if err := task_manager.AddText(eventDescription); err != nil {
+	if err := task_manager.AddText(eventDescription, task_manager.TextTypeNormal, config.GetRandomVoice()); err != nil {
 		logger.Error(fmt.Sprintf("[SuperChatHandler] 添加事件到任务管理器失败: %v", err))
 	}
 

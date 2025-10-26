@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 	"github.com/ebitengine/oto/v3"
 	"github.com/hajimehoshi/go-mp3"
@@ -261,11 +262,12 @@ func (e *AudioEngine) playPCMData(audioData []byte, volume int) error {
 // audioData: 音频数据（支持 MP3 或 PCM 格式）
 // volume: 音量 (1-100)
 // 返回: error
-func PlayAudio(audioData []byte, volume int) error {
+func PlayAudio(audioData []byte) error {
 	// 参数验证
 	if len(audioData) == 0 {
 		return fmt.Errorf("audio data cannot be empty")
 	}
+	volume := config.GetVolume()
 	if volume < 1 {
 		volume = 1
 		logger.Warn(fmt.Sprintf("收到无效音量值 %d，设置为默认值 1", volume))
@@ -300,11 +302,12 @@ func PlayAudio(audioData []byte, volume int) error {
 // audioData: 音频数据（支持 MP3 或 PCM 格式）
 // volume: 音量 (1-100)
 // 返回: error 和完成信号channel
-func PlayAudioWithCompletion(audioData []byte, volume int) (<-chan struct{}, error) {
+func PlayAudioWithCompletion(audioData []byte) (<-chan struct{}, error) {
 	// 参数验证
 	if len(audioData) == 0 {
 		return nil, fmt.Errorf("audio data cannot be empty")
 	}
+	volume := config.GetVolume()
 	if volume < 1 {
 		volume = 1
 		logger.Warn(fmt.Sprintf("收到无效音量值 %d，设置为默认值 1", volume))
@@ -334,7 +337,7 @@ func PlayAudioWithCompletion(audioData []byte, volume int) (<-chan struct{}, err
 		// 等待任务开始并返回错误（如果有）和完成信号
 		err := <-task.Done
 		return completion, err
-	case <-time.After(30 * time.Second):
+	case <-time.After(60 * time.Second):
 		close(completion) // 超时时关闭完成信号
 		return completion, fmt.Errorf("audio playback request timeout")
 	}

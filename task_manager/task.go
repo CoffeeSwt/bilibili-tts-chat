@@ -3,6 +3,7 @@ package task_manager
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"strings"
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/config"
@@ -13,7 +14,7 @@ import (
 )
 
 // PlayEventTasks 处理事件任务：从task_manager获取文本、调用LLM、生成语音、播报
-func PlayEventTasks(ctx context.Context, voice *config.Voice) {
+func PlayEventTasks(ctx context.Context) {
 	// 检查是否有正在运行的任务
 	if !IsTaskRunning() {
 		logger.Warn("PlayEventTasks: 没有正在运行的任务")
@@ -23,73 +24,33 @@ func PlayEventTasks(ctx context.Context, voice *config.Voice) {
 	// 从task_manager获取文本并完成任务
 	texts := CompleteTask()
 
-	// 参数验证
-	if len(texts) == 0 {
-		logger.Warn("PlayEventTasks: 从任务管理器获取的文本列表为空")
-		return
+	var llmTexts []TextWindow
+	var commandTexts []TextWindow
+
+	// 处理文本
+	for _, text := range texts {
+		switch text.TextType {
+		case TextTypeNormal:
+			llmTexts = append(llmTexts, text)
+		case TextTypeCommand:
+			commandTexts = append(commandTexts, text)
+		default:
+			logger.Warn(fmt.Sprintf("PlayEventTasks: 未知文本类型: %v", text.TextType))
+		}
+	}
+	// 处理LLM文本
+	if len(llmTexts) > 0 {
+		if err := UseLLMTask(ctx, llmTexts); err != nil {
+			logger.Error(fmt.Sprintf("PlayEventTasks: UseLLMTask 失败: %v", err))
+		}
 	}
 
-	logger.Info("PlayEventTasks: 开始处理任务", "texts_count", len(texts))
-
-	// 2. 生成提示词并调用大模型
-	prompt := llm.GeneratePrompt(texts)
-	logger.Info("PlayEventTasks: 提示词生成完成", "prompt_length", len(prompt))
-
-	// 检查上下文是否已取消
-	select {
-	case <-ctx.Done():
-		logger.Info("PlayEventTasks: 任务被取消")
-		return
-	default:
+	// 处理命令文本
+	if len(commandTexts) > 0 {
+		if err := UseCommandTask(ctx, commandTexts); err != nil {
+			logger.Error(fmt.Sprintf("PlayEventTasks: UseCommandTask 失败: %v", err))
+		}
 	}
-
-	// 3. 调用LLM流式对话
-	llmResponse, err := callLLMStream(ctx, prompt)
-	if err != nil {
-		logger.Error("PlayEventTasks: LLM调用失败", "error", err)
-		return
-	}
-
-	if llmResponse == "" {
-		logger.Warn("PlayEventTasks: LLM返回空响应")
-		return
-	}
-
-	logger.Info("PlayEventTasks: LLM响应获取完成", "response_length", len(llmResponse))
-
-	// 检查上下文是否已取消
-	select {
-	case <-ctx.Done():
-		logger.Info("PlayEventTasks: 任务被取消")
-		return
-	default:
-	}
-
-	// 4. 将大模型返回的内容转换为语音
-	audioData, err := generateSpeech(llmResponse, voice)
-	if err != nil {
-		logger.Error("PlayEventTasks: 语音生成失败", "error", err)
-		return
-	}
-
-	logger.Info("PlayEventTasks: 语音生成完成", "audio_size", len(audioData))
-
-	// 检查上下文是否已取消
-	select {
-	case <-ctx.Done():
-		logger.Info("PlayEventTasks: 任务被取消")
-		return
-	default:
-	}
-
-	// 5. 播报语音并等待播报完成
-	err = playAudioAndWait(ctx, audioData)
-	if err != nil {
-		logger.Error("PlayEventTasks: 音频播放失败", "error", err)
-		return
-	}
-
-	logger.Info("PlayEventTasks: 任务完成")
 }
 
 // callLLMStream 调用LLM流式对话并收集完整响应
@@ -168,10 +129,10 @@ func generateSpeech(text string, voice *config.Voice) ([]byte, error) {
 	return ttsResult.AudioData, nil
 }
 
-// playAudioAndWait 播放音频并等待完成
-func playAudioAndWait(ctx context.Context, audioData []byte) error {
+// PlayAudioAndWait 播放音频并等待完成
+func PlayAudioAndWait(ctx context.Context, audioData []byte) error {
 	// 使用带完成信号的播放接口
-	completionChan, err := voice.PlayAudioWithCompletion(audioData, 80) // 音量设置为80%
+	completionChan, err := voice.PlayAudioWithCompletion(audioData) // 音量设置为80%
 	if err != nil {
 		return fmt.Errorf("启动音频播放失败: %v", err)
 	}
@@ -185,4 +146,98 @@ func playAudioAndWait(ctx context.Context, audioData []byte) error {
 		logger.Info("playAudioAndWait: 音频播放完成")
 		return nil
 	}
+}
+
+func UseLLMTask(ctx context.Context, texts []TextWindow) error {
+	// 参数验证
+	if len(texts) == 0 {
+		logger.Warn("PlayEventTasks: 从任务管理器获取的文本列表为空")
+		return nil
+	}
+
+	logger.Info("PlayEventTasks: 开始处理任务", "texts_count", len(texts))
+
+	// 2. 生成提示词并调用大模型
+	var textContents []string
+	for _, text := range texts {
+		textContents = append(textContents, text.Text)
+	}
+	prompt := llm.GeneratePrompt(textContents)
+	logger.Info("PlayEventTasks: 提示词生成完成", "prompt_length", len(prompt))
+
+	// 检查上下文是否已取消
+	select {
+	case <-ctx.Done():
+		logger.Info("PlayEventTasks: 任务被取消")
+		return nil
+	default:
+	}
+
+	// 3. 调用LLM流式对话
+	llmResponse, err := callLLMStream(ctx, prompt)
+	if err != nil {
+		logger.Error("PlayEventTasks: LLM调用失败", "error", err)
+		return nil
+	}
+
+	if llmResponse == "" {
+		logger.Warn("PlayEventTasks: LLM返回空响应")
+		return nil
+	}
+
+	logger.Info("PlayEventTasks: LLM响应获取完成", "response_length", len(llmResponse))
+
+	// 检查上下文是否已取消
+	select {
+	case <-ctx.Done():
+		logger.Info("PlayEventTasks: 任务被取消")
+		return nil
+	default:
+	}
+
+	randIndex := rand.Intn(len(texts))
+	// 4. 将大模型返回的内容转换为语音
+	audioData, err := generateSpeech(llmResponse, texts[randIndex].Voice)
+	if err != nil {
+		logger.Error("PlayEventTasks: 语音生成失败", "error", err)
+		return nil
+	}
+
+	logger.Info("PlayEventTasks: 语音生成完成", "audio_size", len(audioData))
+
+	// 检查上下文是否已取消
+	select {
+	case <-ctx.Done():
+		logger.Info("PlayEventTasks: 任务被取消")
+		return nil
+	default:
+	}
+
+	// 5. 播报语音并等待播报完成
+	err = PlayAudioAndWait(ctx, audioData)
+	if err != nil {
+		logger.Error("PlayEventTasks: 音频播放失败", "error", err)
+		return nil
+	}
+
+	logger.Info("PlayEventTasks: 任务完成")
+	return nil
+}
+
+func UseCommandTask(ctx context.Context, texts []TextWindow) error {
+	for _, text := range texts {
+		audioData, err := generateSpeech(text.Text, text.Voice)
+		if err != nil {
+			logger.Error("PlayEventTasks: 语音生成失败", "error", err)
+			return nil
+		}
+		logger.Info("PlayEventTasks: 语音生成完成", "audio_size", len(audioData))
+		err = PlayAudioAndWait(ctx, audioData)
+		if err != nil {
+			logger.Error("PlayEventTasks: 音频播放失败", "error", err)
+			return nil
+		}
+		logger.Info("PlayEventTasks: 任务完成")
+	}
+	return nil
 }

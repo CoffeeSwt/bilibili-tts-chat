@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 	"github.com/CoffeeSwt/bilibili-tts-chat/response"
 	"github.com/CoffeeSwt/bilibili-tts-chat/task_manager"
@@ -31,15 +32,15 @@ func HandleGuard(cmdData []byte) error {
 
 	var eventDescription string
 	if msg.Data.GuardNum > 1 {
-		eventDescription = fmt.Sprintf("【大航海】用户 %s 购买了 %d%s %s（总价值：%d）", 
+		eventDescription = fmt.Sprintf("【大航海】用户 %s 购买了 %d%s %s（总价值：%d）",
 			msg.Data.UserInfo.UName, msg.Data.GuardNum, msg.Data.GuardUnit, guardName, msg.Data.Price)
 	} else {
-		eventDescription = fmt.Sprintf("【大航海】用户 %s 购买了 %s（价值：%d）", 
+		eventDescription = fmt.Sprintf("【大航海】用户 %s 购买了 %s（价值：%d）",
 			msg.Data.UserInfo.UName, guardName, msg.Data.Price)
 	}
 
 	// 将事件描述添加到任务管理器
-	if err := task_manager.AddText(eventDescription); err != nil {
+	if err := task_manager.AddText(eventDescription, task_manager.TextTypeNormal, config.GetRandomVoice()); err != nil {
 		logger.Error(fmt.Sprintf("[GuardHandler] 添加事件到任务管理器失败: %v", err))
 	}
 

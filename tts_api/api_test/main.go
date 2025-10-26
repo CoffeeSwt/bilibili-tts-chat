@@ -25,7 +25,7 @@ func main() {
 				return
 			}
 
-			voiceErr := voice.PlayAudio(ttsRes.AudioData, 100)
+			voiceErr := voice.PlayAudio(ttsRes.AudioData)
 			if voiceErr != nil {
 				logger.Error("播放语音失败", "err", voiceErr)
 				return

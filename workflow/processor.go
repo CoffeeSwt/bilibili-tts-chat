@@ -272,7 +272,11 @@ func (wp *WorkflowProcessor) checkAndProcessTasks() {
 	}
 
 	// 检查文本长度
-	totalLength := wp.calculateTotalTextLength(texts)
+	var textContents []string
+	for _, text := range texts {
+		textContents = append(textContents, text.Text)
+	}
+	totalLength := wp.calculateTotalTextLength(textContents)
 	if totalLength < wp.config.MinTextLength {
 		if wp.config.EnableDebugLog {
 			logger.Debug(fmt.Sprintf("文本长度不足，跳过处理: %d < %d", totalLength, wp.config.MinTextLength))
@@ -287,7 +291,7 @@ func (wp *WorkflowProcessor) checkAndProcessTasks() {
 	}
 
 	// 处理任务
-	go wp.processTask(allTexts)
+	go wp.processTask(textContents)
 }
 
 // calculateTotalTextLength 计算文本总长度
@@ -499,7 +503,7 @@ func (wp *WorkflowProcessor) playAudio(taskID int64, audioData []byte) error {
 	}
 
 	// 使用带完成信号的播放方法
-	completion, err := voice.PlayAudioWithCompletion(audioData, wp.config.Volume)
+	completion, err := voice.PlayAudioWithCompletion(audioData)
 	if err != nil {
 		return fmt.Errorf("启动音频播放失败: %v", err)
 	}
@@ -526,11 +530,6 @@ func Start() error {
 // Stop 停止工作流处理器
 func Stop() error {
 	return GetInstance().Stop()
-}
-
-// SetVoiceConfig 设置语音配置
-func SetVoiceConfig(voice *config.Voice) error {
-	return GetInstance().SetVoiceConfig(voice)
 }
 
 // SetConfig 设置工作流配置

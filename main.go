@@ -5,6 +5,7 @@ import (
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/bili"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
+	"github.com/CoffeeSwt/bilibili-tts-chat/user"
 )
 
 func main() {
@@ -28,12 +29,21 @@ func main() {
 		if err := app.Stop(); err != nil {
 			logger.Error("停止应用失败", "error", err)
 		}
-		
+
+		// 保存用户音频配置数据
+		logger.Info("正在保存用户音频配置...")
+		if err := user.SaveUserVoices(); err != nil {
+			logger.Error("保存用户音频配置失败", "error", err)
+			log.Printf("保存用户音频配置失败: %v", err)
+		} else {
+			logger.Info("用户音频配置保存成功")
+		}
+
 		// 刷新并关闭日志文件
 		if err := logger.FlushLogs(); err != nil {
 			log.Printf("刷新日志失败: %v", err)
 		}
-		
+
 		// 关闭文件写入器
 		if fw := logger.GetFileWriter(); fw != nil {
 			if err := fw.Close(); err != nil {

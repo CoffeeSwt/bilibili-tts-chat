@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 )
 
@@ -18,18 +19,24 @@ const (
 
 // TaskInfo 任务信息
 type TaskInfo struct {
-	ID        string    // 任务ID
-	StartTime time.Time // 任务开始时间
-	Texts     []string  // 任务期间收集的文本
+	ID        string       // 任务ID
+	StartTime time.Time    // 任务开始时间
+	Texts     []TextWindow // 任务期间收集的文本
+}
+
+type TextWindow struct {
+	Text     string
+	TextType TextType
+	Voice    *config.Voice
 }
 
 // TaskManager 任务管理器
 type TaskManager struct {
-	mutex       sync.RWMutex // 读写锁保护并发访问
-	status      TaskStatus   // 当前任务状态
-	currentTask *TaskInfo    // 当前任务信息
-	textWindow  []string     // 文本窗口
-	taskCounter int          // 任务计数器，用于生成任务ID
+	mutex       sync.RWMutex  // 读写锁保护并发访问
+	status      TaskStatus    // 当前任务状态
+	currentTask *TaskInfo     // 当前任务信息
+	textWindow  []TextWindow  // 文本窗口
+	taskCounter int           // 任务计数器，用于生成任务ID
 	taskNotify  chan struct{} // 任务通知通道
 }
 
@@ -44,7 +51,7 @@ func GetInstance() *TaskManager {
 		instance = &TaskManager{
 			status:      TaskStatusIdle,
 			currentTask: nil,
-			textWindow:  make([]string, 0),
+			textWindow:  make([]TextWindow, 0),
 			taskCounter: 0,
 			taskNotify:  make(chan struct{}, 1), // 缓冲通道，避免阻塞
 		}
@@ -55,7 +62,7 @@ func GetInstance() *TaskManager {
 
 // AddText 添加文本到窗口
 // 当窗口为空时，第一个文本的添加会自动开始新任务
-func (tm *TaskManager) AddText(text string) error {
+func (tm *TaskManager) AddText(text string, textType TextType, voice *config.Voice) error {
 	tm.mutex.Lock()
 	defer tm.mutex.Unlock()
 
@@ -75,11 +82,19 @@ func (tm *TaskManager) AddText(text string) error {
 	}
 
 	// 添加文本到窗口
-	tm.textWindow = append(tm.textWindow, text)
+	tm.textWindow = append(tm.textWindow, TextWindow{
+		Text:     text,
+		TextType: textType,
+		Voice:    voice,
+	})
 
 	// 如果有当前任务，也添加到任务记录中
 	if tm.currentTask != nil {
-		tm.currentTask.Texts = append(tm.currentTask.Texts, text)
+		tm.currentTask.Texts = append(tm.currentTask.Texts, TextWindow{
+			Text:     text,
+			TextType: textType,
+			Voice:    voice,
+		})
 	}
 
 	logger.Info(fmt.Sprintf("添加文本到窗口: %s (窗口大小: %d)", text, len(tm.textWindow)))
@@ -94,7 +109,7 @@ func (tm *TaskManager) startNewTask() {
 	tm.currentTask = &TaskInfo{
 		ID:        taskID,
 		StartTime: time.Now(),
-		Texts:     make([]string, 0),
+		Texts:     make([]TextWindow, 0),
 	}
 	tm.status = TaskStatusRunning
 
@@ -103,17 +118,17 @@ func (tm *TaskManager) startNewTask() {
 
 // CompleteTask 完成当前任务并返回所有文本信息
 // 返回窗口中的所有文本，并清空窗口准备下一个任务
-func (tm *TaskManager) CompleteTask() []string {
+func (tm *TaskManager) CompleteTask() []TextWindow {
 	tm.mutex.Lock()
 	defer tm.mutex.Unlock()
 
 	if tm.status == TaskStatusIdle {
 		logger.Warn("没有正在运行的任务")
-		return []string{}
+		return []TextWindow{}
 	}
 
 	// 获取窗口中的所有文本
-	texts := make([]string, len(tm.textWindow))
+	texts := make([]TextWindow, len(tm.textWindow))
 	copy(texts, tm.textWindow)
 
 	// 记录任务完成信息
@@ -141,12 +156,12 @@ func (tm *TaskManager) IsTaskRunning() bool {
 }
 
 // GetCurrentTexts 获取当前窗口中的文本（不清空窗口）
-func (tm *TaskManager) GetCurrentTexts() []string {
+func (tm *TaskManager) GetCurrentTexts() []TextWindow {
 	tm.mutex.RLock()
 	defer tm.mutex.RUnlock()
 
 	// 返回文本的副本，避免外部修改
-	texts := make([]string, len(tm.textWindow))
+	texts := make([]TextWindow, len(tm.textWindow))
 	copy(texts, tm.textWindow)
 
 	return texts
@@ -165,7 +180,7 @@ func (tm *TaskManager) GetTaskInfo() *TaskInfo {
 	taskInfo := &TaskInfo{
 		ID:        tm.currentTask.ID,
 		StartTime: tm.currentTask.StartTime,
-		Texts:     make([]string, len(tm.currentTask.Texts)),
+		Texts:     make([]TextWindow, len(tm.currentTask.Texts)),
 	}
 	copy(taskInfo.Texts, tm.currentTask.Texts)
 
@@ -181,11 +196,11 @@ func (tm *TaskManager) GetWindowSize() int {
 }
 
 // ForceCompleteTask 强制完成当前任务（即使窗口为空）
-func (tm *TaskManager) ForceCompleteTask() []string {
+func (tm *TaskManager) ForceCompleteTask() []TextWindow {
 	tm.mutex.Lock()
 	defer tm.mutex.Unlock()
 
-	texts := make([]string, len(tm.textWindow))
+	texts := make([]TextWindow, len(tm.textWindow))
 	copy(texts, tm.textWindow)
 
 	if tm.currentTask != nil {
@@ -234,15 +249,22 @@ func (tm *TaskManager) GetStats() map[string]interface{} {
 	return stats
 }
 
+type TextType int
+
+const (
+	TextTypeNormal  TextType = iota //AI模式正常回复
+	TextTypeCommand                 //用户命令
+)
+
 // 便利函数，直接使用单例实例
 
 // AddText 添加文本到全局任务管理器
-func AddText(text string) error {
-	return GetInstance().AddText(text)
+func AddText(text string, textType TextType, voice *config.Voice) error {
+	return GetInstance().AddText(text, textType, voice)
 }
 
 // CompleteTask 完成当前任务
-func CompleteTask() []string {
+func CompleteTask() []TextWindow {
 	return GetInstance().CompleteTask()
 }
 
@@ -252,7 +274,7 @@ func IsTaskRunning() bool {
 }
 
 // GetCurrentTexts 获取当前窗口中的文本
-func GetCurrentTexts() []string {
+func GetCurrentTexts() []TextWindow {
 	return GetInstance().GetCurrentTexts()
 }
 
