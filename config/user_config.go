@@ -11,6 +11,7 @@ import (
 type UserConfig struct {
 	RoomIDCode      string `json:"room_id_code"`      // 直播间身份码
 	RoomDescription string `json:"room_description"`  // 直播间描述 //用于为主播定制上下文，例如主播叫什么，正在播什么，喜欢什么，擅长什么，有什么特点
+	AssistantName   string `json:"assistant_name"`    // 助手名称 // 用于指定助手的名称，例如"助手"、"小助手"等
 	MaxUserDataLen  int    `json:"max_user_data_len"` // 最大用户数据长度 // 用于限制用户数据的长度，防止占用过多内存
 	CleanupInterval int    `json:"cleanup_interval"`  // 清理间隔 // 用于指定清理不活跃用户的时间间隔，单位为天
 	Volume          int    `json:"volume"`            // 音量 // 用于指定播放音频的音量，范围为1-100
@@ -83,4 +84,8 @@ func GetVolume() int {
 		volume = 100
 	}
 	return volume
+}
+
+func GetAssistantName() string {
+	return GetUserConfig().AssistantName
 }

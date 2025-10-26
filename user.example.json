@@ -3,5 +3,6 @@
     "room_description": "这是一个直播房间，主播是一杯甜的苦咖啡，他正在直播写代码，创造一个AI语音直播助手",
     "max_user_data_len": 1000,
     "cleanup_interval": 7,
-    "volume": 30
+    "volume": 5,
+    "assistant_name": "小七"
 }

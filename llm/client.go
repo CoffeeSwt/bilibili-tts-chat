@@ -80,7 +80,7 @@ func GetInstance() *LLMClient {
 				MaxTokens:    2048,
 				Timeout:      30 * time.Second,
 				MaxRetries:   3,
-				SystemPrompt: "你是一个智能助手，请根据用户的问题提供有帮助的回答。",
+				SystemPrompt: fmt.Sprintf("你是一个直播间的助播助手，你是一个独立的个体，你的名称是 %s。，你的任务是帮助直播间的观众互动，回复弹幕消息，保持直播间氛围。", config.GetAssistantName()),
 			},
 			httpClient: &http.Client{
 				Timeout: 45 * time.Second,
