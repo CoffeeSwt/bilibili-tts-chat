@@ -98,7 +98,7 @@ func getEventSpecificPrompt(eventType EventType, eventContent string) string {
 	switch eventType {
 	case EventDanmaku:
 		return fmt.Sprintf(`针对弹幕消息，作为%s你要直接与观众互动：
-- 先播报弹幕内容，例如："哇！xxx说xxx，有意思！"
+- 先播报弹幕内容，例如："xxx说xxx，有意思！"
 - 然后作为%s直接回应，营造热闹氛围
 - 播报时要提到用户名，让大家都知道是谁在互动
 - 整体控制在30-50字，语气活跃热情，营造直播间氛围
@@ -225,6 +225,9 @@ func GeneratePrompt(msgs []string) string {
 		lengthRequirement = "25-40字"
 	}
 
+	cacheEventData := GetCacheEventData()
+	cacheEventDataStr := strings.Join(cacheEventData, "\n")
+
 	// 获取助手名字
 	assistantName := config.GetAssistantName()
 
@@ -244,6 +247,7 @@ func GeneratePrompt(msgs []string) string {
 - 作为%s直接与观众互动，营造直播间氛围
 - 避免重复事件内容，给出自然有趣的回应
 - 适当使用网络流行语，保持年轻化语气
+- 也要结合之前的几次弹幕信息，来合理组织这条消息的回复
 
 【价值层级感谢规则】
 总督>提督>舰长（按价值匹配感谢程度），高价值礼物表达震撼感激，普通礼物温暖感谢
@@ -252,7 +256,9 @@ func GeneratePrompt(msgs []string) string {
 
 【事件内容】%s
 
-作为%s直接回应（%s）：`, assistantName, roomDescription, assistantName, assistantName, assistantName, lengthRequirement, assistantName, eventSpecificPrompt, eventContent, assistantName, lengthRequirement)
+【之前的事件信息】%s
+
+作为%s直接回应（%s）：`, assistantName, roomDescription, assistantName, assistantName, assistantName, lengthRequirement, assistantName, eventSpecificPrompt, eventContent, cacheEventDataStr, assistantName, lengthRequirement)
 
 	return prompt
 }

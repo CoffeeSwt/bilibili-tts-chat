@@ -184,6 +184,8 @@ func UseLLMTask(ctx context.Context, texts []TextWindow) error {
 		logger.Warn("PlayEventTasks: LLM返回空响应")
 		return nil
 	}
+	// 4. 缓存LLM响应
+	llm.AddCacheEventData(llmResponse)
 
 	logger.Info("PlayEventTasks: LLM响应获取完成", "response_length", len(llmResponse))
 
@@ -196,7 +198,7 @@ func UseLLMTask(ctx context.Context, texts []TextWindow) error {
 	}
 
 	randIndex := rand.Intn(len(texts))
-	// 4. 将大模型返回的内容转换为语音
+	// 5. 将大模型返回的内容转换为语音
 	audioData, err := generateSpeech(llmResponse, texts[randIndex].Voice)
 	if err != nil {
 		logger.Error("PlayEventTasks: 语音生成失败", "error", err)
@@ -213,7 +215,7 @@ func UseLLMTask(ctx context.Context, texts []TextWindow) error {
 	default:
 	}
 
-	// 5. 播报语音并等待播报完成
+	// 6. 播报语音并等待播报完成
 	err = PlayAudioAndWait(ctx, audioData)
 	if err != nil {
 		logger.Error("PlayEventTasks: 音频播放失败", "error", err)

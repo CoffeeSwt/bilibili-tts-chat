@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/config"
+	"github.com/CoffeeSwt/bilibili-tts-chat/llm"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 )
 
@@ -260,6 +261,8 @@ const (
 
 // AddText 添加文本到全局任务管理器
 func AddText(text string, textType TextType, voice *config.Voice) error {
+	// 先添加到缓存中
+	llm.AddCacheEventData(text)
 	return GetInstance().AddText(text, textType, voice)
 }
 
