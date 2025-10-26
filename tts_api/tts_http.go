@@ -39,6 +39,7 @@ type AudioParams struct {
 	Format          string `json:"format"`
 	SampleRate      int    `json:"sample_rate"`
 	EnableTimestamp bool   `json:"enable_timestamp"`
+	SpeechRate      int    `json:"speech_rate"`
 }
 
 // ReqParams 请求参数
@@ -115,6 +116,7 @@ func GenerateSpeech(text string, voice *config.Voice) (*TTSResult, error) {
 				Format:          "mp3",
 				SampleRate:      24000,
 				EnableTimestamp: true,
+				SpeechRate:      config.GetSpeechRate(),
 			},
 			Additions: `{"explicit_language": "zh","disable_markdown_filter":true, "enable_timestamp":true}`,
 		},

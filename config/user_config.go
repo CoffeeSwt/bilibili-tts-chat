@@ -15,6 +15,7 @@ type UserConfig struct {
 	MaxUserDataLen      int    `json:"max_user_data_len"`     // 最大用户数据长度 // 用于限制用户数据的长度，防止占用过多内存
 	CleanupInterval     int    `json:"cleanup_interval"`      // 清理间隔 // 用于指定清理不活跃用户的时间间隔，单位为天
 	Volume              int    `json:"volume"`                // 音量 // 用于指定播放音频的音量，范围为1-100
+	SpeechRate          int    `json:"speech_rate"`           // 广播语速 // 用于指定广播消息的语速，范围为[-50,100]，100代表2.0倍速，-50代表0.5倍数
 	AssistantMemorySize int    `json:"assistant_memory_size"` // 助手的记忆大小
 }
 
@@ -93,4 +94,9 @@ func GetAssistantName() string {
 
 func GetAssistantMemorySize() int {
 	return GetUserConfig().AssistantMemorySize
+}
+
+func GetSpeechRate() int {
+	rate := min(max(GetUserConfig().SpeechRate, -50), 100)
+	return rate
 }
