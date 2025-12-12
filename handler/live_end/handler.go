@@ -20,12 +20,17 @@ func HandleLiveEnd(cmdData []byte) error {
 	logger.Info(fmt.Sprintf("[直播结束] 房间: %d, 结束时间: %d",
 		msg.Data.RoomID, msg.Data.Timestamp))
 
-	// 构建结构化的事件描述，方便AI理解和回复
-	eventDescription := fmt.Sprintf("【直播结束】主播结束了直播，房间号：%d", msg.Data.RoomID)
-
-	// 将事件描述添加到任务管理器
-	if err := task_manager.AddText(eventDescription, task_manager.TextTypeNormal, config.GetRandomVoice()); err != nil {
-		logger.Error(fmt.Sprintf("[LiveEndHandler] 添加事件到任务管理器失败: %v", err))
+	usingLLMReply := config.GetUseLLMReplay()
+	if usingLLMReply {
+		eventDescription := fmt.Sprintf("【直播结束】主播结束了直播，房间号：%d", msg.Data.RoomID)
+		if err := task_manager.AddText(eventDescription, task_manager.TextTypeNormal, config.GetRandomVoice()); err != nil {
+			logger.Error(fmt.Sprintf("[LiveEndHandler] 添加事件到任务管理器失败: %v", err))
+		}
+	} else {
+		reply := fmt.Sprintf("直播结束，房间号：%d", msg.Data.RoomID)
+		if err := task_manager.AddText(reply, task_manager.TextTypeNoLLMReply, config.GetRandomVoice()); err != nil {
+			logger.Error(fmt.Sprintf("[LiveEndHandler] 添加事件到任务管理器失败: %v", err))
+		}
 	}
 
 	return nil

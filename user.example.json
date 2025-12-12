@@ -6,5 +6,6 @@
     "volume": 15,
     "assistant_name": "小七",
     "assistant_memory_size": 5,
-    "speech_rate": 0
+    "speech_rate": 0,
+    "use_llm_replay": false
 }

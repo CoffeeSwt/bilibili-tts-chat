@@ -26,6 +26,7 @@ func PlayEventTasks(ctx context.Context) {
 
 	var llmTexts []TextWindow
 	var commandTexts []TextWindow
+	var noLLMReplyTexts []TextWindow
 
 	// 处理文本
 	for _, text := range texts {
@@ -34,6 +35,8 @@ func PlayEventTasks(ctx context.Context) {
 			llmTexts = append(llmTexts, text)
 		case TextTypeCommand:
 			commandTexts = append(commandTexts, text)
+		case TextTypeNoLLMReply:
+			noLLMReplyTexts = append(noLLMReplyTexts, text)
 		default:
 			logger.Warn(fmt.Sprintf("PlayEventTasks: 未知文本类型: %v", text.TextType))
 		}
@@ -49,6 +52,12 @@ func PlayEventTasks(ctx context.Context) {
 	if len(commandTexts) > 0 {
 		if err := UseCommandTask(ctx, commandTexts); err != nil {
 			logger.Error(fmt.Sprintf("PlayEventTasks: UseCommandTask 失败: %v", err))
+		}
+	}
+
+	if len(noLLMReplyTexts) > 0 {
+		if err := UseNoLLMReplyTask(ctx, noLLMReplyTexts); err != nil {
+			logger.Error(fmt.Sprintf("PlayEventTasks: UseNoLLMReplyTask 失败: %v", err))
 		}
 	}
 }
@@ -227,6 +236,24 @@ func UseLLMTask(ctx context.Context, texts []TextWindow) error {
 }
 
 func UseCommandTask(ctx context.Context, texts []TextWindow) error {
+	for _, text := range texts {
+		audioData, err := generateSpeech(text.Text, text.Voice)
+		if err != nil {
+			logger.Error("PlayEventTasks: 语音生成失败", "error", err)
+			return nil
+		}
+		logger.Info("PlayEventTasks: 语音生成完成", "audio_size", len(audioData))
+		err = PlayAudioAndWait(ctx, audioData)
+		if err != nil {
+			logger.Error("PlayEventTasks: 音频播放失败", "error", err)
+			return nil
+		}
+		logger.Info("PlayEventTasks: 任务完成")
+	}
+	return nil
+}
+
+func UseNoLLMReplyTask(ctx context.Context, texts []TextWindow) error {
 	for _, text := range texts {
 		audioData, err := generateSpeech(text.Text, text.Voice)
 		if err != nil {

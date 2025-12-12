@@ -253,8 +253,9 @@ func (tm *TaskManager) GetStats() map[string]interface{} {
 type TextType int
 
 const (
-	TextTypeNormal  TextType = iota //AI模式正常回复
-	TextTypeCommand                 //用户命令
+	TextTypeNormal     TextType = iota //AI模式正常回复
+	TextTypeCommand                    //用户命令
+	TextTypeNoLLMReply                 //不使用LLM回复
 )
 
 // 便利函数，直接使用单例实例

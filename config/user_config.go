@@ -17,6 +17,7 @@ type UserConfig struct {
 	Volume              int    `json:"volume"`                // 音量 // 用于指定播放音频的音量，范围为1-100
 	SpeechRate          int    `json:"speech_rate"`           // 广播语速 // 用于指定广播消息的语速，范围为[-50,100]，100代表2.0倍速，-50代表0.5倍数
 	AssistantMemorySize int    `json:"assistant_memory_size"` // 助手的记忆大小
+	UseLLMReplay        bool   `json:"use_llm_replay"`        // 是否使用LLM回复 // 用于指定是否使用LLM模型回复用户消息，为true时表示使用，为false时表示不使用
 }
 
 // 全局配置实例
@@ -99,4 +100,8 @@ func GetAssistantMemorySize() int {
 func GetSpeechRate() int {
 	rate := min(max(GetUserConfig().SpeechRate, -50), 100)
 	return rate
+}
+
+func GetUseLLMReplay() bool {
+	return GetUserConfig().UseLLMReplay
 }
