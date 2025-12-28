@@ -6,6 +6,7 @@ import (
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/handler/dm"
 	"github.com/CoffeeSwt/bilibili-tts-chat/handler/guard"
+	"github.com/CoffeeSwt/bilibili-tts-chat/handler/interaction_end"
 	"github.com/CoffeeSwt/bilibili-tts-chat/handler/like"
 	"github.com/CoffeeSwt/bilibili-tts-chat/handler/live_end"
 	"github.com/CoffeeSwt/bilibili-tts-chat/handler/live_room_enter"
@@ -57,8 +58,8 @@ func (h *MessageHandler) HandleMessage(cmdData []byte) error {
 		return live_start.HandleLiveStart(cmdData)
 	case "LIVE_OPEN_PLATFORM_LIVE_END":
 		return live_end.HandleLiveEnd(cmdData)
-	// case "LIVE_OPEN_PLATFORM_INTERACTION_END":
-	// 	return h.HandleInteractionEnd(cmdData)
+	case "LIVE_OPEN_PLATFORM_INTERACTION_END":
+		return interaction_end.HandleInteractionEnd(cmdData)
 	default:
 		logger.Warn(fmt.Sprintf("未知的消息类型: %s", baseMsg.Cmd))
 		return fmt.Errorf("未知的消息类型: %s", baseMsg.Cmd)
