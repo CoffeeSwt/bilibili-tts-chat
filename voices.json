@@ -450,28 +450,28 @@
         },
         {
             "id": 65,
-            "name": "灿灿/Shiny",
+            "name": "灿灿",
             "voice_type": "zh_female_cancan_mars_bigtts",
             "gender": "female",
             "api_resource_id": "seed-tts-1.0"
         },
         {
             "id": 66,
-            "name": "爽快思思/Skye",
+            "name": "思思",
             "voice_type": "zh_female_shuangkuaisisi_moon_bigtts",
             "gender": "female",
             "api_resource_id": "seed-tts-1.0"
         },
         {
             "id": 67,
-            "name": "温暖阿虎/Alvin",
+            "name": "温暖阿虎",
             "voice_type": "zh_male_wennuanahu_moon_bigtts",
             "gender": "male",
             "api_resource_id": "seed-tts-1.0"
         },
         {
             "id": 68,
-            "name": "少年梓辛/Brayan",
+            "name": "少年梓辛",
             "voice_type": "zh_male_shaonianzixin_moon_bigtts",
             "gender": "male",
             "api_resource_id": "seed-tts-1.0"
@@ -632,7 +632,7 @@
         },
         {
             "id": 91,
-            "name": "京腔侃爷/Harmony",
+            "name": "侃爷",
             "voice_type": "zh_male_jingqiangkanye_moon_bigtts",
             "gender": "male",
             "api_resource_id": "seed-tts-1.0"
@@ -1899,28 +1899,28 @@
         },
         {
             "id": 272,
-            "name": "磁性解说男声/Morgan",
+            "name": "磁性解说男声",
             "voice_type": "zh_male_jieshuonansheng_mars_bigtts",
             "gender": "male",
             "api_resource_id": "seed-tts-1.0"
         },
         {
             "id": 273,
-            "name": "鸡汤妹妹/Hope",
+            "name": "鸡汤妹妹",
             "voice_type": "zh_female_jitangmeimei_mars_bigtts",
             "gender": "female",
             "api_resource_id": "seed-tts-1.0"
         },
         {
             "id": 274,
-            "name": "贴心女声/Candy",
+            "name": "贴心女声",
             "voice_type": "zh_female_tiexinnvsheng_mars_bigtts",
             "gender": "female",
             "api_resource_id": "seed-tts-1.0"
         },
         {
             "id": 275,
-            "name": "萌丫头/Cutey",
+            "name": "萌丫头",
             "voice_type": "zh_female_mengyatou_mars_bigtts",
             "gender": "female",
             "api_resource_id": "seed-tts-1.0"

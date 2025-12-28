@@ -53,7 +53,7 @@ func (a *App) startup(ctx context.Context) {
 		// 显示特定的关键事件
 		keywords := []string{
 			"启动", "成功", "失败", "连接", "断开", // 系统状态
-			"弹幕", "礼物", "关注", "舰长", "SC", "进入", // 直播间事件
+			"弹幕", "礼物", "关注", "舰长", "SC", "进入", "点赞", // 直播间事件
 			"TTS", "LLM", // AI相关
 			"保存", "配置", // 用户操作
 		}
@@ -72,6 +72,7 @@ func (a *App) startup(ctx context.Context) {
 			"解析消息",
 			"No handler",
 			"收到消息类型",
+			"添加文本到窗口", // 过滤任务管理器的内部日志
 		}
 
 		for _, kw := range ignoredKeywords {
