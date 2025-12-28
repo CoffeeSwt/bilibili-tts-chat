@@ -109,10 +109,10 @@ try {
     
     # Move build artifact to root dist folder
     if (Test-Path "build\bin\wails.exe") {
-        Copy-Item "build\bin\wails.exe" -Destination "..\dist\bilibili-tts-chat.exe"
-        $fileSize = (Get-Item "..\dist\bilibili-tts-chat.exe").Length
+        Copy-Item "build\bin\wails.exe" -Destination "..\dist\start.exe"
+        $fileSize = (Get-Item "..\dist\start.exe").Length
         $fileSizeMB = [math]::Round($fileSize / 1MB, 2)
-        Write-Host "Build Success: bilibili-tts-chat.exe ($fileSizeMB MB)" -ForegroundColor Green
+        Write-Host "Build Success: start.exe ($fileSizeMB MB)" -ForegroundColor Green
     } else {
         Write-Host "Error: Build completed but executable not found" -ForegroundColor Red
         Pop-Location
@@ -181,6 +181,6 @@ Get-ChildItem "dist" | ForEach-Object {
 
 Write-Host ""
 Write-Host "Usage:" -ForegroundColor Yellow
-Write-Host "  1. Run: .\bilibili-tts-chat.exe" -ForegroundColor White
+Write-Host "  1. Run: .\start.exe" -ForegroundColor White
 Write-Host "  2. Configure Room ID Code in the interface on first run" -ForegroundColor White
 Write-Host "  Note: API Keys are embedded, no .env file needed" -ForegroundColor Gray
