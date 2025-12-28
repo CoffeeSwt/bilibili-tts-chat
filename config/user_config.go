@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path/filepath"
 	"sync"
 )
 
@@ -18,6 +17,7 @@ type UserConfig struct {
 	SpeechRate          int    `json:"speech_rate"`           // 广播语速 // 用于指定广播消息的语速，范围为[-50,100]，100代表2.0倍速，-50代表0.5倍数
 	AssistantMemorySize int    `json:"assistant_memory_size"` // 助手的记忆大小
 	UseLLMReplay        bool   `json:"use_llm_replay"`        // 是否使用LLM回复 // 用于指定是否使用LLM模型回复用户消息，为true时表示使用，为false时表示不使用
+	FirstStart          bool   `json:"first_start"`           // 是否第一次启动 // 用于指定是否第一次启动程序，为true时表示第一次启动，为false时表示不是第一次启动，第一次启动用于初始化配置
 }
 
 // 全局配置实例
@@ -28,28 +28,29 @@ var (
 
 // loadConfig 加载配置
 func loadUserConfig() {
-	// 获取当前工作目录
 	wd, _ := os.Getwd()
-	configPath := filepath.Join(wd, "user.json")
-
-	// 打开文件
-	file, err := os.Open(configPath)
-	if err != nil {
-		ErrorInit(fmt.Sprintf("打开 user.json 文件失败: %v", err))
-		return
+	configPath, ok := findFileUpwards(wd, "user.json")
+	if !ok {
+		// 回退到示例配置
+		if examplePath, ok2 := findFileUpwards(wd, "user.example.json"); ok2 {
+			configPath = examplePath
+			fmt.Println("⚠️ 未找到 user.json，已回退到 user.example.json")
+		} else {
+			ErrorInit(fmt.Sprintf("未找到 user.json 或 user.example.json"))
+			return
+		}
 	}
-	defer file.Close()
 
 	// 读取文件内容
 	content, err := os.ReadFile(configPath)
 	if err != nil {
-		ErrorInit(fmt.Sprintf("读取 user.json 文件失败: %v", err))
+		ErrorInit(fmt.Sprintf("读取用户配置文件失败: %v", err))
 		return
 	}
 	var userConfig UserConfig
 	err = json.Unmarshal(content, &userConfig)
 	if err != nil {
-		ErrorInit(fmt.Sprintf("解析 user.json 文件失败: %v", err))
+		ErrorInit(fmt.Sprintf("解析用户配置文件失败: %v", err))
 		return
 	}
 	_userConfig = &userConfig
@@ -104,4 +105,8 @@ func GetSpeechRate() int {
 
 func GetUseLLMReplay() bool {
 	return GetUserConfig().UseLLMReplay
+}
+
+func IfFirstStart() bool {
+	return GetUserConfig().FirstStart
 }

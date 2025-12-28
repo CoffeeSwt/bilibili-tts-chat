@@ -145,13 +145,21 @@ func loadUserVoices() {
 
 // getConfigFilePath 获取配置文件的绝对路径
 func getConfigFilePath() string {
-	// 获取当前工作目录
 	wd, err := os.Getwd()
 	if err != nil {
 		logger.Error(fmt.Sprintf("[getConfigFilePath] 获取工作目录失败: %v", err))
-		// 回退到相对路径
 		return "user_voices.yaml"
 	}
+	// 优先使用已存在的配置文件（向上查找）
+	if p, ok := config.FindFileUpwardsProxy(wd, "user_voices.yaml"); ok {
+		return p
+	}
+	// 其次锚定到项目根（go.mod 所在目录）
+	if gm, ok := config.FindFileUpwardsProxy(wd, "go.mod"); ok {
+		root := filepath.Dir(gm)
+		return filepath.Join(root, "user_voices.yaml")
+	}
+	// 回退到当前工作目录
 	return filepath.Join(wd, "user_voices.yaml")
 }
 
@@ -174,6 +182,11 @@ func saveUserVoicesInternal() error {
 		return fmt.Errorf("序列化配置失败: %v", err)
 	}
 
+	// 若路径未初始化，补充初始化
+	if configPath == "" {
+		configPath = getConfigFilePath()
+	}
+
 	// 确保目录存在
 	dir := filepath.Dir(configPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
@@ -190,6 +203,7 @@ func saveUserVoicesInternal() error {
 
 // SaveUserVoices 手动保存用户音色配置（公开接口）
 func SaveUserVoices() error {
+	loadUserVoices()
 	voiceMutex.Lock()
 	defer voiceMutex.Unlock()
 

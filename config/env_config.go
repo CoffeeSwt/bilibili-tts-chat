@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -68,18 +67,47 @@ func getWithDefault[T any](envMap map[string]string, key string, defaultValue T)
 
 // loadConfig 加载配置
 func loadEnvConfig() {
-	// 读取 .env 文件
-
+	// 读取 .env 文件，支持向上查找以及回退到 .env.example
 	envMap := make(map[string]string)
-	// 获取当前工作目录
 	wd, _ := os.Getwd()
-	// 构建 .env 文件路径
-	envPath := filepath.Join(wd, ".env")
+	envPath, ok := findFileUpwards(wd, ".env")
+	if !ok {
+		// 回退到 .env.example
+		if examplePath, ok2 := findFileUpwards(wd, ".env.example"); ok2 {
+			envPath = examplePath
+		} else {
+			// 未找到任何配置文件，使用默认值并记录提示
+			fmt.Println("⚠️ 未找到 .env 或 .env.example，将使用默认配置（可能限制部分功能）")
+			envConfig = &EnvConfig{
+				Mode:                Dev,
+				TTS_XApiAppID:       "",
+				TTS_XApiAccessKey:   "",
+				BiliAppID:           "",
+				BiliAccessKey:       "",
+				BiliSecretKey:       "",
+				LLMMockEnabled:      false,
+				LLMVolcengineAPIKey: "",
+				LLMVolcengineModel:  "",
+			}
+			return
+		}
+	}
 
-	// 打开文件
 	file, err := os.Open(envPath)
 	if err != nil {
-		ErrorInit(fmt.Sprintf("打开 .env 文件失败: %v", err))
+		fmt.Println("⚠️ 打开配置文件失败，将使用默认配置:", err)
+		envConfig = &EnvConfig{
+			Mode:                Dev,
+			TTS_XApiAppID:       "",
+			TTS_XApiAccessKey:   "",
+			BiliAppID:           "",
+			BiliAccessKey:       "",
+			BiliSecretKey:       "",
+			LLMMockEnabled:      false,
+			LLMVolcengineAPIKey: "",
+			LLMVolcengineModel:  "",
+		}
+		return
 	}
 	defer file.Close()
 
