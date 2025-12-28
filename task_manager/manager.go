@@ -292,6 +292,25 @@ func GetWindowSize() int {
 	return GetInstance().GetWindowSize()
 }
 
+// ClearTasks 清空所有任务和窗口（用于重启应用）
+func ClearTasks() {
+	tm := GetInstance()
+	tm.mutex.Lock()
+	defer tm.mutex.Unlock()
+
+	tm.textWindow = tm.textWindow[:0]
+	tm.status = TaskStatusIdle
+	tm.currentTask = nil
+	
+	// 尝试清空通知通道
+	select {
+	case <-tm.taskNotify:
+	default:
+	}
+
+	logger.Info("任务管理器状态已重置")
+}
+
 // GetStats 获取统计信息
 func GetStats() map[string]interface{} {
 	return GetInstance().GetStats()

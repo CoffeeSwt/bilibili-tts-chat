@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
-import { GetConfig, SaveConfig } from '../../wailsjs/go/main/App'
+import { GetConfig, SaveConfig, RestartApp } from '../../wailsjs/go/main/App'
 
 const emit = defineEmits(['saved'])
 
@@ -57,6 +57,10 @@ const save = async () => {
     currentConfig.volume = parseInt(form.volume)
     
     await SaveConfig(currentConfig)
+    
+    // Trigger restart to apply changes (especially room ID)
+    await RestartApp()
+    
     emit('saved')
   } catch (e) {
     state.error = '保存失败: ' + e

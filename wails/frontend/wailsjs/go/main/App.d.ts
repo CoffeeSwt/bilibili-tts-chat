@@ -6,4 +6,6 @@ export function GetConfig():Promise<config.UserConfig>;
 
 export function Greet(arg1:string):Promise<string>;
 
+export function RestartApp():Promise<void>;
+
 export function SaveConfig(arg1:config.UserConfig):Promise<void>;

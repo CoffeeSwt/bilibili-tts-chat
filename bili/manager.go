@@ -143,6 +143,14 @@ func (am *AppManager) Stop() error {
 		}
 	}
 
+	// 显式停止WebSocket连接
+	if err := StopWebsocket(); err != nil {
+		logger.Error("停止WebSocket连接失败", err)
+	}
+
+	// 清理任务管理器状态
+	task_manager.ClearTasks()
+
 	am.isRunning = false
 	logger.Info("应用管理器已停止")
 	return nil

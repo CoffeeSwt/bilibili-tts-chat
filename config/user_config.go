@@ -37,7 +37,7 @@ func loadUserConfig() {
 			configPath = examplePath
 			fmt.Println("⚠️ 未找到 user.json，已回退到 user.example.json")
 		} else {
-			ErrorInit(fmt.Sprintf("未找到 user.json 或 user.example.json"))
+			ErrorInit("未找到 user.json 或 user.example.json")
 			return
 		}
 	}

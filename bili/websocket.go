@@ -149,8 +149,26 @@ type AuthRespParam struct {
 	Code int64 `json:"code,omitempty"`
 }
 
+var (
+	// globalWebsocketClient 保持全局单例，避免多次调用StartWebsocket导致多个连接
+	globalWebsocketClient *WebsocketClient
+	globalMutex           sync.Mutex
+)
+
 // StartWebsocket 启动长连
 func StartWebsocket(wsAddr, authBody string) (err error) {
+	globalMutex.Lock()
+	defer globalMutex.Unlock()
+
+	// 如果已存在连接，先关闭
+	if globalWebsocketClient != nil {
+		logger.Info("发现旧的WebSocket连接，正在关闭...")
+		if err := globalWebsocketClient.Shutdown(); err != nil {
+			logger.Error("关闭旧WebSocket连接失败", err)
+		}
+		globalWebsocketClient = nil
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 
 	wc := &WebsocketClient{
@@ -180,6 +198,20 @@ func StartWebsocket(wsAddr, authBody string) (err error) {
 	// 启动健康监控
 	go wc.healthMonitor()
 
+	globalWebsocketClient = wc
+	return nil
+}
+
+// StopWebsocket 停止全局WebSocket连接
+func StopWebsocket() error {
+	globalMutex.Lock()
+	defer globalMutex.Unlock()
+
+	if globalWebsocketClient != nil {
+		err := globalWebsocketClient.Shutdown()
+		globalWebsocketClient = nil
+		return err
+	}
 	return nil
 }
 

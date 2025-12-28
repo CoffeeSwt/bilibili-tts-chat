@@ -88,3 +88,23 @@ func (a *App) GetConfig() *config.UserConfig {
 func (a *App) SaveConfig(cfg config.UserConfig) error {
 	return config.SaveUserConfig(cfg)
 }
+
+// RestartApp 重启应用逻辑（停止旧实例并启动新实例）
+func (a *App) RestartApp() error {
+	logger.Info("前端触发应用重启...")
+	
+	if a.appManager != nil {
+		if err := a.appManager.Stop(); err != nil {
+			logger.Error("重启前停止应用失败", "error", err)
+		}
+	}
+
+	a.appManager = bili.NewAppManager()
+	if err := a.appManager.Start(); err != nil {
+		logger.Error("重启应用失败", "error", err)
+		return fmt.Errorf("重启失败: %v", err)
+	}
+	
+	logger.Info("应用重启成功")
+	return nil
+}
