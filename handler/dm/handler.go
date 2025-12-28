@@ -21,8 +21,8 @@ func HandleDanmaku(cmdData []byte) error {
 		return err
 	}
 
-	logger.Info(fmt.Sprintf("收到弹幕: %s, 用户: %s, 房间: %d",
-		msg.Data.Msg, msg.Data.UName, msg.Data.RoomID))
+	logger.Info(fmt.Sprintf("[弹幕消息][%s]%s: %s",
+		user.GetUserVoice(msg.Data.UName).Name, msg.Data.UName, msg.Data.Msg))
 
 	// // 添加粉丝勋章信息
 	// if msg.Data.FansMedalWearingStatus && msg.Data.FansMedalName != "" {

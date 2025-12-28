@@ -33,7 +33,7 @@ func HandleLike(cmdData []byte) error {
 		}
 	} else {
 		reply := fmt.Sprintf("感谢%s的点赞", msg.Data.UName)
-		if msg.Data.LikeCount > 15 {
+		if msg.Data.LikeCount > 5 {
 			reply = fmt.Sprintf("感谢%s的点赞，%s", msg.Data.UName, common.RandomBlessing())
 		}
 		if err := task_manager.AddText(reply, task_manager.TextTypeNoLLMReply, user.GetUserVoice(msg.Data.UName)); err != nil {
