@@ -64,7 +64,7 @@ func handleSwitchVoiceByName(msg *response.DanmakuMessage, arg string) error {
 			logger.Info(fmt.Sprintf("[DanmakuHandler] 用户 %s 指定切换音色为: %s", msg.Data.UName, v.Name))
 		} else {
 			v = config.GetRandomVoice()
-			switchMessage = fmt.Sprintf("%s 指定的音色 \"%s\" 不存在，已随机切换为 %s", msg.Data.UName, voiceName, v.Name)
+			switchMessage = fmt.Sprintf("%s 的播报音色已切换为 %s", msg.Data.UName, v.Name)
 			logger.Info(fmt.Sprintf("[DanmakuHandler] 用户 %s 指定的音色 \"%s\" 不存在，随机切换为: %s", msg.Data.UName, voiceName, v.Name))
 		}
 	} else {

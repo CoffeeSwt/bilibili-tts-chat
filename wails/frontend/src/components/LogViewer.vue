@@ -1,10 +1,13 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, onUnmounted } from 'vue'
 import { EventsOn } from '../../wailsjs/runtime/runtime'
 
 const logs = ref([])
 const logContainer = ref(null)
 const autoScroll = ref(true)
+const heartbeatStatus = ref('inactive') // inactive, active, warning
+const lastHeartbeatTime = ref(0)
+const heartbeatTimer = ref(null)
 
 const maxLogs = 1000
 
@@ -22,6 +25,33 @@ onMounted(() => {
       })
     }
   })
+
+  // Listen for heartbeat events
+  EventsOn('heartbeat', () => {
+    heartbeatStatus.value = 'active'
+    lastHeartbeatTime.value = Date.now()
+  })
+
+  // Check heartbeat status periodically
+  heartbeatTimer.value = setInterval(() => {
+    const now = Date.now()
+    if (lastHeartbeatTime.value > 0) {
+      const diff = now - lastHeartbeatTime.value
+      if (diff > 60000) { // > 60s no heartbeat
+        heartbeatStatus.value = 'inactive'
+      } else if (diff > 30000) { // > 30s no heartbeat
+        heartbeatStatus.value = 'warning'
+      } else {
+        heartbeatStatus.value = 'active'
+      }
+    }
+  }, 5000)
+})
+
+onUnmounted(() => {
+  if (heartbeatTimer.value) {
+    clearInterval(heartbeatTimer.value)
+  }
 })
 
 const scrollToBottom = () => {
@@ -48,7 +78,10 @@ const getLevelClass = (level) => {
 <template>
   <div class="log-viewer">
     <div class="toolbar">
-      <span class="title">日志监控</span>
+      <div class="title-area">
+        <span class="title">日志监控</span>
+        <div class="status-indicator" :class="heartbeatStatus" title="心跳状态"></div>
+      </div>
       <div class="actions">
         <label><input type="checkbox" v-model="autoScroll"> 自动滚动</label>
         <button class="btn-clear" @click="clearLogs">清空</button>
@@ -59,7 +92,7 @@ const getLevelClass = (level) => {
       <div v-for="(log, index) in logs" :key="index" class="log-entry">
         <span class="time">{{ log.timestamp.split(' ')[1] }}</span>
         <span class="level" :class="getLevelClass(log.level)">[{{ log.level }}]</span>
-        <span class="location">{{ log.location }}</span>
+        <!-- <span class="location">{{ log.location }}</span> -->
         <span class="message">{{ log.message }}</span>
       </div>
     </div>
@@ -86,6 +119,35 @@ const getLevelClass = (level) => {
   padding: 8px 12px;
   background: #2d2d2d;
   border-bottom: 1px solid #3d3d3d;
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #555; /* inactive */
+  transition: background-color 0.3s ease;
+  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+.status-indicator.active {
+  background: #4caf50; /* green */
+  box-shadow: 0 0 5px #4caf50;
+}
+
+.status-indicator.warning {
+  background: #ffeb3b; /* yellow */
+  box-shadow: 0 0 5px #ffeb3b;
+}
+
+.status-indicator.inactive {
+  background: #f44336; /* red */
 }
 
 .title {
