@@ -41,7 +41,8 @@ func (a *App) startup(ctx context.Context) {
 
 	a.appManager = bili.NewAppManager()
 	if err := a.appManager.Start(); err != nil {
-		log.Fatalf("启动应用失败: %v", err)
+		logger.Error("启动应用失败", "error", err)
+		// 不再退出，允许前端查看日志
 	}
 }
 

@@ -1,61 +1,137 @@
-﻿# Go项目构建脚本
-# 构建bilibili-tts-chat项目到dist目录
+# Go Project Build Script
+# Build bilibili-tts-chat to dist directory
 
-Write-Host "=== Go项目构建脚本 ===" -ForegroundColor Green
+Write-Host "=== Go Project Build Script ===" -ForegroundColor Green
 Write-Host ""
 
-# 检查Go环境
-Write-Host "正在检查Go环境..." -ForegroundColor Cyan
+# XOR Encryption Function
+function Encrypt-String {
+    param (
+        [string]$InputString
+    )
+    
+    if ([string]::IsNullOrEmpty($InputString)) {
+        return ""
+    }
+    
+    $Key = "bilibili-tts-chat-secret-key-2025"
+    $InputBytes = [System.Text.Encoding]::UTF8.GetBytes($InputString)
+    $EncryptedBytes = New-Object byte[] $InputBytes.Length
+    
+    # Convert Key to byte array to ensure correct XOR operation
+    $KeyBytes = [System.Text.Encoding]::UTF8.GetBytes($Key)
+    
+    for ($i = 0; $i -lt $InputBytes.Length; $i++) {
+        $EncryptedBytes[$i] = $InputBytes[$i] -bxor $KeyBytes[$i % $KeyBytes.Length]
+    }
+    
+    return [Convert]::ToBase64String($EncryptedBytes)
+}
+
+# Check Go Environment
+Write-Host "Checking Go environment..." -ForegroundColor Cyan
 try {
     $goVersion = go version 2>$null
     if (-not $goVersion) {
-        Write-Host "错误：未找到Go环境，请先安装Go" -ForegroundColor Red
+        Write-Host "Error: Go not found, please install Go first" -ForegroundColor Red
         exit 1
     }
-    Write-Host "Go环境检查通过：$goVersion" -ForegroundColor Green
+    Write-Host "Go environment check passed: $goVersion" -ForegroundColor Green
 } catch {
-    Write-Host "错误：Go环境检查失败" -ForegroundColor Red
+    Write-Host "Error: Go environment check failed" -ForegroundColor Red
     exit 1
 }
 
-# 清理并创建dist目录
-Write-Host "正在准备dist目录..." -ForegroundColor Cyan
+# Check Wails Environment
+Write-Host "Checking Wails environment..." -ForegroundColor Cyan
+try {
+    $wailsVersion = wails version 2>$null
+    if (-not $wailsVersion) {
+        Write-Host "Error: Wails not found, please install Wails (go install github.com/wailsapp/wails/v2/cmd/wails@latest)" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "Wails environment check passed" -ForegroundColor Green
+} catch {
+    Write-Host "Error: Wails environment check failed" -ForegroundColor Red
+    exit 1
+}
+
+# Read and Encrypt .env Configuration
+Write-Host "Reading .env configuration for embedding..." -ForegroundColor Cyan
+
+# Check if .env exists in root
+if (Test-Path ".env") {
+    Write-Host "Found root .env file" -ForegroundColor Green
+    
+    # Check config directory
+    if (-not (Test-Path "config")) {
+        New-Item -ItemType Directory -Path "config" -Force | Out-Null
+    }
+    
+    # Copy .env to config directory for go:embed
+    Copy-Item ".env" -Destination "config\.env" -Force
+    Write-Host "Copied .env to config/ directory for embedding" -ForegroundColor Green
+} else {
+    Write-Host "Warning: .env file not found in root directory!" -ForegroundColor Yellow
+}
+
+# Clean and Create dist Directory
+Write-Host "Preparing dist directory..." -ForegroundColor Cyan
 if (Test-Path "dist") {
     Remove-Item "dist" -Recurse -Force
-    Write-Host "已清理旧的dist目录" -ForegroundColor Green
+    Write-Host "Old dist directory cleaned" -ForegroundColor Green
 }
 
 New-Item -ItemType Directory -Path "dist" -Force | Out-Null
-Write-Host "已创建dist目录" -ForegroundColor Green
+Write-Host "dist directory created" -ForegroundColor Green
 
-# 构建二进制文件
-Write-Host "正在构建二进制文件..." -ForegroundColor Cyan
+# Switch to wails directory for build
+Write-Host "Switching to wails directory..." -ForegroundColor Cyan
+Push-Location wails
+
+# Build Binary
+Write-Host "Building Wails application..." -ForegroundColor Cyan
 try {
-    $buildResult = go build -o "dist\bilibili-tts-chat.exe" . 2>&1
+    # Execute wails build with injected ldflags
+    
+    # Default flags plus our injected flags
+    $finalFlags = "-s -w"
+    
+    Write-Host "Build Flags: $finalFlags" -ForegroundColor Gray
+    
+    wails build -ldflags $finalFlags
     
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "错误：构建失败：$buildResult" -ForegroundColor Red
+        Write-Host "Error: Build failed" -ForegroundColor Red
+        Pop-Location
         exit 1
     }
     
-    if (Test-Path "dist\bilibili-tts-chat.exe") {
-        $fileSize = (Get-Item "dist\bilibili-tts-chat.exe").Length
+    # Move build artifact to root dist folder
+    if (Test-Path "build\bin\wails.exe") {
+        Copy-Item "build\bin\wails.exe" -Destination "..\dist\bilibili-tts-chat.exe"
+        $fileSize = (Get-Item "..\dist\bilibili-tts-chat.exe").Length
         $fileSizeMB = [math]::Round($fileSize / 1MB, 2)
-        Write-Host "构建成功：bilibili-tts-chat.exe ($fileSizeMB MB)" -ForegroundColor Green
+        Write-Host "Build Success: bilibili-tts-chat.exe ($fileSizeMB MB)" -ForegroundColor Green
     } else {
-        Write-Host "错误：构建完成但未找到可执行文件" -ForegroundColor Red
+        Write-Host "Error: Build completed but executable not found" -ForegroundColor Red
+        Pop-Location
         exit 1
     }
 } catch {
-    Write-Host "错误：构建过程失败：$_" -ForegroundColor Red
+    Write-Host "Error: Build process failed: $_" -ForegroundColor Red
+    Pop-Location
     exit 1
 }
 
-# 复制配置文件
-Write-Host "正在复制和准备配置文件..." -ForegroundColor Cyan
+# Restore working directory
+Pop-Location
+
+# Copy Configuration Files
+Write-Host "Copying and preparing configuration files..." -ForegroundColor Cyan
 
 $configFiles = @(
-    @{Source = ".env.example"; Target = ".env"}
+    # .env is not copied because it's injected into the binary
     @{Source = "user.example.json"; Target = "user.json"}
     @{Source = "voices.json"; Target = "voices.json"}
 )
@@ -66,62 +142,45 @@ foreach ($config in $configFiles) {
     
     if (Test-Path $sourceFile) {
         try {
-            if ($sourceFile -eq ".env.example") {
-                # 复制.example文件到dist目录
+            if ($sourceFile -eq "user.example.json") {
+                # Copy .example file to dist directory
                 Copy-Item $sourceFile -Destination "dist\"
-                Write-Host "已复制：$sourceFile 到 dist/" -ForegroundColor Green
+                Write-Host "Copied: $sourceFile to dist/" -ForegroundColor Green
                 
-                # 在dist目录中重命名文件以移除.example后缀
+                # Rename file in dist directory to remove .example suffix
                 $distExampleFile = "dist\$sourceFile"
                 $distTargetFile = "dist\$targetFile"
                 
                 if (Test-Path $distExampleFile) {
                     Rename-Item $distExampleFile -NewName $targetFile
-                    Write-Host "已重命名：$sourceFile -> $targetFile" -ForegroundColor Green
-                } else {
-                    Write-Host "警告：找不到已复制的文件：$distExampleFile" -ForegroundColor Yellow
-                }
-            } elseif ($sourceFile -eq "user.example.json") {
-                # 复制.example文件到dist目录
-                Copy-Item $sourceFile -Destination "dist\"
-                Write-Host "已复制：$sourceFile 到 dist/" -ForegroundColor Green
-                
-                # 在dist目录中重命名文件以移除.example后缀
-                $distExampleFile = "dist\$sourceFile"
-                $distTargetFile = "dist\$targetFile"
-                
-                if (Test-Path $distExampleFile) {
-                    Rename-Item $distExampleFile -NewName $targetFile
-                    Write-Host "已重命名：$sourceFile -> $targetFile" -ForegroundColor Green
-                } else {
-                    Write-Host "警告：找不到已复制的文件：$distExampleFile" -ForegroundColor Yellow
+                    Write-Host "Renamed: $sourceFile -> $targetFile" -ForegroundColor Green
                 }
             } else {
-                # 直接复制其他配置文件
+                # Directly copy other config files
                 Copy-Item $sourceFile -Destination "dist\"
-                Write-Host "已复制：$sourceFile 到 dist/" -ForegroundColor Green
+                Write-Host "Copied: $sourceFile to dist/" -ForegroundColor Green
             }
         } catch {
-            Write-Host "错误：处理 $sourceFile 失败：$_" -ForegroundColor Red
+            Write-Host "Error: Failed to process $sourceFile : $_" -ForegroundColor Red
         }
     } else {
-        Write-Host "警告：找不到源文件：$sourceFile" -ForegroundColor Yellow
+        Write-Host "Warning: Source file not found: $sourceFile" -ForegroundColor Yellow
     }
 }
 
-# 显示结果
+# Show Results
 Write-Host ""
-Write-Host "=== 构建完成 ===" -ForegroundColor Green
-Write-Host "构建目录：$(Get-Location)\dist" -ForegroundColor White
+Write-Host "=== Build Completed ===" -ForegroundColor Green
+Write-Host "Build Directory: $(Get-Location)\dist" -ForegroundColor White
 Write-Host ""
-Write-Host "dist目录中的文件：" -ForegroundColor Yellow
+Write-Host "Files in dist directory:" -ForegroundColor Yellow
 Get-ChildItem "dist" | ForEach-Object {
-    $size = if ($_.PSIsContainer) { "目录" } else { "$([math]::Round($_.Length / 1KB, 1))KB" }
+    $size = if ($_.PSIsContainer) { "Directory" } else { "$([math]::Round($_.Length / 1KB, 1))KB" }
     Write-Host "  $($_.Name) ($size)" -ForegroundColor White
 }
 
 Write-Host ""
-Write-Host "使用方法：" -ForegroundColor Yellow
-Write-Host "  1. 编辑.env文件并配置您的环境变量" -ForegroundColor White
-Write-Host "  2. 编辑user.json和voices.json文件并配置您的应用设置" -ForegroundColor White
-Write-Host "  3. 运行：.\bilibili-tts-chat.exe" -ForegroundColor White
+Write-Host "Usage:" -ForegroundColor Yellow
+Write-Host "  1. Run: .\bilibili-tts-chat.exe" -ForegroundColor White
+Write-Host "  2. Configure Room ID Code in the interface on first run" -ForegroundColor White
+Write-Host "  Note: API Keys are embedded, no .env file needed" -ForegroundColor Gray

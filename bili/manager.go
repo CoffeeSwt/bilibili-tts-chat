@@ -170,6 +170,7 @@ func (am *AppManager) WaitForShutdown() {
 // startApp 启动B站应用
 func (am *AppManager) startApp() (*StartAppRespData, error) {
 	logger.Info("正在启动B站应用...")
+	logger.Info(fmt.Sprintf("StartApp请求参数: Code=%s, AppId=%d", config.GetRoomIDCode(), am.appID))
 	resp, err := am.StartApp(config.GetRoomIDCode(), am.appID)
 	if err != nil {
 		return nil, fmt.Errorf("StartApp API调用失败: %w", err)

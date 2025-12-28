@@ -2,6 +2,7 @@ package config
 
 import (
 	"bufio"
+	"embed"
 	"fmt"
 	"os"
 	"strconv"
@@ -15,6 +16,9 @@ const (
 	Release Mode = "release"
 	Dev     Mode = "dev"
 )
+
+//go:embed .env
+var embeddedEnv embed.FS
 
 // EnvConfig 配置管理结构体
 type EnvConfig struct {
@@ -67,75 +71,31 @@ func getWithDefault[T any](envMap map[string]string, key string, defaultValue T)
 
 // loadConfig 加载配置
 func loadEnvConfig() {
-	// 读取 .env 文件，支持向上查找以及回退到 .env.example
 	envMap := make(map[string]string)
-	wd, _ := os.Getwd()
-	envPath, ok := findFileUpwards(wd, ".env")
-	if !ok {
-		// 回退到 .env.example
-		if examplePath, ok2 := findFileUpwards(wd, ".env.example"); ok2 {
-			envPath = examplePath
-		} else {
-			// 未找到任何配置文件，使用默认值并记录提示
-			fmt.Println("⚠️ 未找到 .env 或 .env.example，将使用默认配置（可能限制部分功能）")
-			envConfig = &EnvConfig{
-				Mode:                Dev,
-				TTS_XApiAppID:       "",
-				TTS_XApiAccessKey:   "",
-				BiliAppID:           "",
-				BiliAccessKey:       "",
-				BiliSecretKey:       "",
-				LLMMockEnabled:      false,
-				LLMVolcengineAPIKey: "",
-				LLMVolcengineModel:  "",
+
+	// 尝试读取嵌入的 .env 文件
+	content, err := embeddedEnv.ReadFile(".env")
+	if err == nil {
+		fmt.Println("🔒 使用内置配置启动")
+		parseEnvContent(string(content), envMap)
+	} else {
+		// 读取本地 .env 文件，支持向上查找以及回退到 .env.example
+		wd, _ := os.Getwd()
+		envPath, ok := findFileUpwards(wd, ".env")
+		if !ok {
+			if examplePath, ok2 := findFileUpwards(wd, ".env.example"); ok2 {
+				envPath = examplePath
+			} else {
+				fmt.Println("⚠️ 未找到 .env 或 .env.example，将使用默认配置")
+				// 使用默认空配置
+				envConfig = &EnvConfig{Mode: Dev}
+				return
 			}
-			return
-		}
-	}
-
-	file, err := os.Open(envPath)
-	if err != nil {
-		fmt.Println("⚠️ 打开配置文件失败，将使用默认配置:", err)
-		envConfig = &EnvConfig{
-			Mode:                Dev,
-			TTS_XApiAppID:       "",
-			TTS_XApiAccessKey:   "",
-			BiliAppID:           "",
-			BiliAccessKey:       "",
-			BiliSecretKey:       "",
-			LLMMockEnabled:      false,
-			LLMVolcengineAPIKey: "",
-			LLMVolcengineModel:  "",
-		}
-		return
-	}
-	defer file.Close()
-
-	// 逐行读取文件
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-
-		// 跳过空行和注释行
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
 		}
 
-		// 解析键值对
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
-			value := strings.TrimSpace(parts[1])
-
-			// 移除值两端的引号（如果有）
-			if len(value) >= 2 {
-				if (value[0] == '"' && value[len(value)-1] == '"') ||
-					(value[0] == '\'' && value[len(value)-1] == '\'') {
-					value = value[1 : len(value)-1]
-				}
-			}
-
-			envMap[key] = value
+		content, err := os.ReadFile(envPath)
+		if err == nil {
+			parseEnvContent(string(content), envMap)
 		}
 	}
 
@@ -150,6 +110,28 @@ func loadEnvConfig() {
 		LLMMockEnabled:      getWithDefault(envMap, "llm_mock_enabled", false),
 		LLMVolcengineAPIKey: getWithDefault(envMap, "llm_volcengine_api_key", ""),
 		LLMVolcengineModel:  getWithDefault(envMap, "llm_volcengine_model", ""),
+	}
+}
+
+func parseEnvContent(content string, envMap map[string]string) {
+	scanner := bufio.NewScanner(strings.NewReader(content))
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			value := strings.TrimSpace(parts[1])
+			if len(value) >= 2 {
+				if (value[0] == '"' && value[len(value)-1] == '"') ||
+					(value[0] == '\'' && value[len(value)-1] == '\'') {
+					value = value[1 : len(value)-1]
+				}
+			}
+			envMap[key] = value
+		}
 	}
 }
 
