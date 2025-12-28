@@ -36,12 +36,18 @@ const (
 
 // Logger 日志记录器结构体
 type Logger struct {
-	output io.Writer
+	output   io.Writer
+	callback func(level LogLevel, timestamp, location, message string, keyvals ...interface{})
 }
 
 // 默认日志记录器实例
 var defaultLogger = &Logger{
 	output: os.Stdout,
+}
+
+// SetLogCallback 设置日志回调函数
+func SetLogCallback(callback func(level LogLevel, timestamp, location, message string, keyvals ...interface{})) {
+	defaultLogger.callback = callback
 }
 
 // colorizeLevel 为日志级别添加颜色
@@ -143,6 +149,11 @@ func (l *Logger) logWithCaller(level LogLevel, message string, callerSkip int, k
 		// 如果是其他输出（如控制台），使用带颜色的格式
 		logEntry := formatLogForConsole(level, timestamp, location, message, keyvals...)
 		fmt.Fprintln(l.output, logEntry)
+	}
+
+	// 调用回调函数（如果有）
+	if l.callback != nil {
+		l.callback(level, timestamp, location, message, keyvals...)
 	}
 }
 

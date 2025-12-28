@@ -6,8 +6,10 @@ import (
 	"log"
 
 	"github.com/CoffeeSwt/bilibili-tts-chat/bili"
+	"github.com/CoffeeSwt/bilibili-tts-chat/config"
 	"github.com/CoffeeSwt/bilibili-tts-chat/logger"
 	"github.com/CoffeeSwt/bilibili-tts-chat/user"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type App struct {
@@ -26,6 +28,16 @@ func (a *App) startup(ctx context.Context) {
 		log.Fatalf("初始化日志系统失败: %v", err)
 	}
 	logger.Info("日志系统初始化成功")
+
+	// 设置日志回调，将日志发送到前端
+	logger.SetLogCallback(func(level logger.LogLevel, timestamp, location, message string, keyvals ...interface{}) {
+		runtime.EventsEmit(ctx, "log", map[string]interface{}{
+			"level":     string(level),
+			"timestamp": timestamp,
+			"location":  location,
+			"message":   message,
+		})
+	})
 
 	a.appManager = bili.NewAppManager()
 	if err := a.appManager.Start(); err != nil {
@@ -64,4 +76,14 @@ func (a *App) shutdown(ctx context.Context) {
 
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+// GetConfig 获取当前配置
+func (a *App) GetConfig() *config.UserConfig {
+	return config.GetUserConfig()
+}
+
+// SaveConfig 保存配置
+func (a *App) SaveConfig(cfg config.UserConfig) error {
+	return config.SaveUserConfig(cfg)
 }

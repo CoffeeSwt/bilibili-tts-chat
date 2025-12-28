@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -109,4 +110,27 @@ func GetUseLLMReplay() bool {
 
 func IfFirstStart() bool {
 	return GetUserConfig().FirstStart
+}
+
+// SaveUserConfig 保存用户配置
+func SaveUserConfig(cfg UserConfig) error {
+	_userConfig = &cfg
+
+	data, err := json.MarshalIndent(cfg, "", "    ")
+	if err != nil {
+		return fmt.Errorf("序列化配置失败: %v", err)
+	}
+
+	wd, _ := os.Getwd()
+	configPath := filepath.Join(wd, "user.json")
+
+	// 尝试查找现有的 user.json
+	if existingPath, ok := findFileUpwards(wd, "user.json"); ok {
+		configPath = existingPath
+	}
+
+	if err := os.WriteFile(configPath, data, 0644); err != nil {
+		return fmt.Errorf("写入配置失败: %v", err)
+	}
+	return nil
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
-	"path/filepath"
 	"sync"
 )
 
@@ -40,7 +39,11 @@ var (
 func loadVoiceConfig() {
 	// 获取当前工作目录
 	wd, _ := os.Getwd()
-	configPath := filepath.Join(wd, "voices.json")
+	configPath, ok := findFileUpwards(wd, "voices.json")
+	if !ok {
+		ErrorInit("未找到 voices.json，请确保该文件存在")
+		return
+	}
 
 	// 打开文件
 	file, err := os.Open(configPath)
