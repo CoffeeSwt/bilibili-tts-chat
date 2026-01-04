@@ -96,6 +96,9 @@ func (a *App) startup(ctx context.Context) {
 	if err := a.appManager.Start(); err != nil {
 		logger.Error("启动应用失败", "error", err)
 		// 不再退出，允许前端查看日志
+	} else {
+		// 启动成功，立即发送一个活跃信号
+		runtime.EventsEmit(ctx, "heartbeat", "active")
 	}
 }
 

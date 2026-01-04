@@ -41,7 +41,12 @@
 - 您可以随时点击右上角 **"设置"** 调整参数。
 
 ### 4. 高级配置 (.env)
-如果您需要使用自己的 API Key（默认使用内置 Key），请在程序同级目录下创建 `.env` 文件：
+
+> **注意**：为了安全起见，B 站开放平台的 API 凭证（AppID, AccessKey, SecretKey）已内置于程序中，无法通过本地配置文件修改。
+> 
+> 如果您是开发者或有特殊需求需要替换为自己的 B 站应用凭证，请直接联系作者获取授权或自行修改源码重新编译。
+
+如果您需要使用自己的火山引擎 TTS/LLM 服务，请在程序同级目录下创建 `.env` 文件：
 
 ```env
 # 运行模式 (dev/release)
@@ -54,11 +59,6 @@ tts_x_api_access_key=YOUR_ACCESS_KEY
 # 火山引擎 LLM 配置
 llm_volcengine_api_key=YOUR_API_KEY
 llm_volcengine_model=YOUR_MODEL_ID
-
-# B 站开放平台配置
-bili_app_id=YOUR_BILI_APP_ID
-bili_access_key=YOUR_ACCESS_KEY
-bili_secret_key=YOUR_SECRET_KEY
 ```
 
 ---

@@ -19,6 +19,10 @@ onMounted(() => {
       logs.value.shift()
     }
     
+    // Any incoming log (which are filtered important events) counts as activity
+    heartbeatStatus.value = 'active'
+    lastHeartbeatTime.value = Date.now()
+    
     if (autoScroll.value) {
       nextTick(() => {
         scrollToBottom()
@@ -73,26 +77,46 @@ const getLevelClass = (level) => {
     default: return ''
   }
 }
+
+const getStatusText = (status) => {
+  switch(status) {
+    case 'active': return '运行中'
+    case 'warning': return '连接不稳定'
+    case 'inactive': return '连接断开'
+    default: return '未连接'
+  }
+}
 </script>
 
 <template>
   <div class="log-viewer">
     <div class="toolbar">
-      <div class="title-area">
-        <span class="title">日志监控</span>
-        <div class="status-indicator" :class="heartbeatStatus" title="心跳状态"></div>
+      <div class="status-group">
+        <div class="status-indicator-wrapper" :class="heartbeatStatus">
+          <div class="status-dot"></div>
+          <div class="status-ping"></div>
+        </div>
+        <span class="status-text">{{ getStatusText(heartbeatStatus) }}</span>
       </div>
+      
       <div class="actions">
-        <label><input type="checkbox" v-model="autoScroll"> 自动滚动</label>
-        <button class="btn-clear" @click="clearLogs">清空</button>
+        <label class="toggle-scroll">
+          <input type="checkbox" v-model="autoScroll">
+          <span class="toggle-text">自动滚动</span>
+        </label>
+        <button class="btn-clear" @click="clearLogs" title="清空日志">
+          <span class="icon">🗑️</span>
+        </button>
       </div>
     </div>
     
     <div class="logs" ref="logContainer">
-      <div v-for="(log, index) in logs" :key="index" class="log-entry">
+      <div v-if="logs.length === 0" class="empty-state">
+        <span>暂无日志，等待连接...</span>
+      </div>
+      <div v-for="(log, index) in logs" :key="index" class="log-entry" :class="getLevelClass(log.level)">
         <span class="time">{{ log.timestamp.split(' ')[1] }}</span>
-        <span class="level" :class="getLevelClass(log.level)">[{{ log.level }}]</span>
-        <!-- <span class="location">{{ log.location }}</span> -->
+        <span class="level-tag">{{ log.level }}</span>
         <span class="message">{{ log.message }}</span>
       </div>
     </div>
@@ -105,128 +129,187 @@ const getLevelClass = (level) => {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: #1e1e1e;
-  border-radius: 8px;
-  overflow: hidden;
-  font-family: 'Consolas', 'Monaco', monospace;
-  font-size: 13px;
+  background: var(--bg-color);
 }
 
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  background: #2d2d2d;
-  border-bottom: 1px solid #3d3d3d;
+  padding: 10px 20px;
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+  height: 50px;
+  box-sizing: border-box;
 }
 
-.title-area {
+.status-group {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.status-indicator {
-  width: 10px;
-  height: 10px;
+.status-indicator-wrapper {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #555; /* inactive */
-  transition: background-color 0.3s ease;
-  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+  background: var(--text-muted);
+  z-index: 2;
+  transition: all 0.3s;
 }
 
-.status-indicator.active {
-  background: #4caf50; /* green */
-  box-shadow: 0 0 5px #4caf50;
+.status-ping {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.5;
+  z-index: 1;
 }
 
-.status-indicator.warning {
-  background: #ffeb3b; /* yellow */
-  box-shadow: 0 0 5px #ffeb3b;
+/* Active State */
+.active .status-dot { background: var(--success-color); box-shadow: 0 0 5px var(--success-color); }
+.active .status-ping { 
+  background: var(--success-color);
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-.status-indicator.inactive {
-  background: #f44336; /* red */
+/* Warning State */
+.warning .status-dot { background: var(--warning-color); box-shadow: 0 0 5px var(--warning-color); }
+
+/* Inactive State */
+.inactive .status-dot { background: var(--error-color); }
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
 }
 
-.title {
-  font-weight: bold;
-  color: #eee;
+.status-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
 }
 
 .actions {
   display: flex;
   gap: 15px;
   align-items: center;
-  font-size: 12px;
+}
+
+.toggle-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.toggle-scroll input {
+  accent-color: var(--primary-color);
 }
 
 .btn-clear {
-  padding: 2px 8px;
-  background: #444;
-  border: none;
-  border-radius: 3px;
-  color: #ddd;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .btn-clear:hover {
-  background: #555;
+  background: var(--input-bg);
+  border-color: var(--error-color);
+}
+
+.btn-clear .icon {
+  font-size: 14px;
 }
 
 .logs {
   flex: 1;
   overflow-y: auto;
-  padding: 10px;
-  text-align: left;
+  padding: 10px 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 .log-entry {
-  margin-bottom: 4px;
-  line-height: 1.4;
-  word-break: break-all;
+  display: flex;
+  align-items: flex-start;
+  padding: 4px 20px;
+  line-height: 1.6;
+  border-left: 2px solid transparent;
+}
+
+.log-entry:hover {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .time {
-  color: #888;
-  margin-right: 8px;
+  color: var(--text-muted);
+  margin-right: 12px;
+  font-size: 12px;
+  flex-shrink: 0;
 }
 
-.level {
+.level-tag {
   font-weight: bold;
-  margin-right: 8px;
-  min-width: 45px;
-  display: inline-block;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 12px;
+  min-width: 40px;
   text-align: center;
-}
-
-.level.info { color: #4fc1ff; }
-.level.warn { color: #cca700; }
-.level.error { color: #f14c4c; }
-.level.debug { color: #9cdcfe; }
-
-.location {
-  color: #569cd6;
-  margin-right: 8px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .message {
-  color: #d4d4d4;
+  color: var(--text-color);
+  word-break: break-all;
 }
 
-/* Custom Scrollbar */
-.logs::-webkit-scrollbar {
-  width: 8px;
-}
-.logs::-webkit-scrollbar-track {
-  background: #1e1e1e;
-}
-.logs::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 4px;
-}
-.logs::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+/* Log Level Colors */
+.info .level-tag { color: #7aa2f7; background: rgba(122, 162, 247, 0.1); }
+.info .message { color: #c0caf5; }
+
+.warn .level-tag { color: #e0af68; background: rgba(224, 175, 104, 0.1); }
+.warn .message { color: #e0af68; }
+.warn { border-left-color: #e0af68; background: rgba(224, 175, 104, 0.05); }
+
+.error .level-tag { color: #f7768e; background: rgba(247, 118, 142, 0.1); }
+.error .message { color: #f7768e; }
+.error { border-left-color: #f7768e; background: rgba(247, 118, 142, 0.05); }
+
+.debug .level-tag { color: #9aa5ce; background: rgba(154, 165, 206, 0.1); }
+.debug .message { color: #9aa5ce; }
 </style>

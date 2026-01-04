@@ -9,8 +9,6 @@ const currentView = ref('loading') // loading, config, logs
 onMounted(async () => {
   try {
     const config = await GetConfig()
-    // If room_id_code is present, assume configured. 
-    // You can also add a specific flag in config if needed.
     if (config && config.room_id_code) {
       currentView.value = 'logs'
     } else {
@@ -33,43 +31,35 @@ const showSettings = () => {
 
 <template>
   <div class="app-container">
-    <div class="header" v-if="currentView === 'logs'">
+    <div class="header">
       <div class="brand">
-        <img src="./assets/images/logo-universal.png" class="logo-small" />
-        <span>Bilibili TTS Chat</span>
+        <div class="logo-wrapper">
+          <img src="./assets/images/logo-universal.png" class="logo-small" />
+        </div>
+        <span class="brand-text">Bilibili TTS Chat</span>
       </div>
-      <button class="settings-btn" @click="showSettings">⚙️ 设置</button>
+      <button v-if="currentView === 'logs'" class="settings-btn" @click="showSettings" title="设置">
+        <span class="icon">⚙️</span>
+      </button>
+      <button v-if="currentView === 'config' && logs && logs.length > 0" class="back-btn" @click="currentView = 'logs'" title="返回日志">
+        <span class="icon">↩️</span>
+      </button>
     </div>
     
     <div class="content">
-      <div v-if="currentView === 'loading'" class="loading">
-        <div class="spinner"></div>
-        <span>正在初始化...</span>
-      </div>
-      
-      <ConfigForm v-else-if="currentView === 'config'" @saved="onSaved" />
-      
-      <LogViewer v-else-if="currentView === 'logs'" />
+      <transition name="fade" mode="out-in">
+        <div v-if="currentView === 'loading'" class="loading" key="loading">
+          <div class="spinner"></div>
+          <span>正在初始化...</span>
+        </div>
+        
+        <ConfigForm v-else-if="currentView === 'config'" @saved="onSaved" key="config" />
+        
+        <LogViewer v-else-if="currentView === 'logs'" key="logs" />
+      </transition>
     </div>
   </div>
 </template>
-
-<style>
-/* Reset and global styles */
-html, body { 
-  margin: 0; 
-  padding: 0; 
-  width: 100%; 
-  height: 100%; 
-  background-color: #1a1a1a; 
-  color: #ffffff;
-  font-family: 'Nunito', sans-serif;
-}
-#app {
-  width: 100%;
-  height: 100%;
-}
-</style>
 
 <style scoped>
 .app-container {
@@ -77,52 +67,79 @@ html, body {
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  box-sizing: border-box;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background: #252526;
-  border-bottom: 1px solid #333;
-  height: 50px;
-  box-sizing: border-box;
+  padding: 0 20px;
+  height: 60px;
+  background-color: var(--surface-color);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: bold;
+  gap: 12px;
+}
+
+.logo-wrapper {
+  background: white;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo-small {
   height: 24px;
+  width: 24px;
+  object-fit: contain;
 }
 
-.settings-btn {
-  background: transparent;
-  border: 1px solid #444;
-  color: #ccc;
-  padding: 4px 12px;
-  border-radius: 4px;
+.brand-text {
+  font-weight: 700;
+  font-size: 18px;
+  background: linear-gradient(90deg, #00AEEC, #FB7299);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+}
+
+.settings-btn, .back-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
-.settings-btn:hover {
-  background: #333;
-  border-color: #666;
+.settings-btn:hover, .back-btn:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+  transform: translateY(-1px);
 }
 
 .content {
   flex: 1;
   overflow: hidden;
   position: relative;
-  background: #1e1e1e;
+  display: flex;
+  flex-direction: column;
 }
 
 .loading {
@@ -131,15 +148,15 @@ html, body {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #888;
-  gap: 15px;
+  color: var(--text-muted);
+  gap: 20px;
 }
 
 .spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid #333;
-  border-top-color: #42b983;
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--surface-color);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -148,17 +165,18 @@ html, body {
   to { transform: rotate(360deg); }
 }
 
-/* Ensure components take full space */
-:deep(.log-viewer), :deep(.config-form) {
-  height: 100%;
-  box-sizing: border-box;
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
 }
 
-/* Center config form */
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 :deep(.config-form) {
-  margin: 20px auto;
-  height: auto;
-  max-height: calc(100% - 40px);
-  overflow-y: auto;
+  margin: auto;
 }
 </style>

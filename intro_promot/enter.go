@@ -51,7 +51,7 @@ func strategyVoiceRecommendation() string {
 
 	prompts := []string{
 		"你好，我是小七。如果不喜欢现在的声音，可以发送“换音色”试试哦。",
-		fmt.Sprintf("你好呀，我是可以变声的小七，试试发送“切换音色 %s”或者“切换音色 %s”来改变我的声音吧。", voices[0].Name, voices[1].Name),
+		fmt.Sprintf("你好呀，我是可以变声的小七，试试发送“换 %s”来改变我的声音吧。", voices[0].Name),
 		fmt.Sprintf("你好呀，我有好多有趣的声音，比如%s，快来体验一下自定义音色吧。", voiceNames),
 	}
 	return prompts[rand.Intn(len(prompts))]
