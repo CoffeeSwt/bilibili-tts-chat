@@ -71,72 +71,45 @@ func getWithDefault[T any](envMap map[string]string, key string, defaultValue T)
 
 // loadConfig 加载配置
 func loadEnvConfig() {
-	embeddedMap := make(map[string]string)
-	localMap := make(map[string]string)
+	envMap := make(map[string]string)
 
-	// 1. 读取嵌入的 .env (构建时注入，优先级最高)
-	if content, err := embeddedEnv.ReadFile(".env"); err == nil {
-		fmt.Println("🔒 已加载内置配置")
-		parseEnvContent(string(content), embeddedMap)
-	}
-
-	// 2. 读取本地 .env (用于开发或用户覆盖非敏感配置)
-	wd, _ := os.Getwd()
-	if envPath, ok := findFileUpwards(wd, ".env"); ok {
-		if content, err := os.ReadFile(envPath); err == nil {
-			parseEnvContent(string(content), localMap)
-		}
-	} else if examplePath, ok := findFileUpwards(wd, ".env.example"); ok {
-		// 回退到 example
-		if content, err := os.ReadFile(examplePath); err == nil {
-			parseEnvContent(string(content), localMap)
-		}
-	}
-
-	// 辅助函数：优先从 embeddedMap 取，取不到再从 localMap 取
-	// 对于 B站凭证，我们强制优先使用 embeddedMap 中的值（如果有），防止用户通过本地 .env 覆盖
-	// 如果 embeddedMap 中没有（例如开发环境且 config/.env 是空的），则回退到 localMap
-	getVal := func(key string, sensitive bool) string {
-		if val, ok := embeddedMap[key]; ok && val != "" {
-			return val
+	// 尝试读取嵌入的 .env 文件
+	content, err := embeddedEnv.ReadFile(".env")
+	if err == nil {
+		fmt.Println("🔒 使用内置配置启动")
+		parseEnvContent(string(content), envMap)
+	} else {
+		// 读取本地 .env 文件，支持向上查找以及回退到 .env.example
+		wd, _ := os.Getwd()
+		envPath, ok := findFileUpwards(wd, ".env")
+		if !ok {
+			if examplePath, ok2 := findFileUpwards(wd, ".env.example"); ok2 {
+				envPath = examplePath
+			} else {
+				fmt.Println("⚠️ 未找到 .env 或 .env.example，将使用默认配置")
+				// 使用默认空配置
+				envConfig = &EnvConfig{Mode: Dev}
+				return
+			}
 		}
 
-		// 敏感配置（B站凭证）不允许通过本地 .env 覆盖
-		// 必须通过构建脚本注入到 embeddedMap 中，或者在开发时手动放置到 config/.env
-		if sensitive {
-			return ""
+		content, err := os.ReadFile(envPath)
+		if err == nil {
+			parseEnvContent(string(content), envMap)
 		}
-
-		if val, ok := localMap[key]; ok {
-			return val
-		}
-		return ""
 	}
 
 	// 创建配置实例
 	envConfig = &EnvConfig{
-		Mode:              Mode(getVal("mode", false)),
-		TTS_XApiAppID:     getVal("tts_x_api_app_id", false),
-		TTS_XApiAccessKey: getVal("tts_x_api_access_key", false),
-
-		// B站凭证
-		BiliAppID:     getVal("bili_app_id", true),
-		BiliAccessKey: getVal("bili_access_key", true),
-		BiliSecretKey: getVal("bili_secret_key", true),
-
-		LLMMockEnabled:      getVal("llm_mock_enabled", false) == "true",
-		LLMVolcengineAPIKey: getVal("llm_volcengine_api_key", false),
-		LLMVolcengineModel:  getVal("llm_volcengine_model", false),
-	}
-
-	// 如果 mode 未设置，默认为 dev
-	if envConfig.Mode == "" {
-		envConfig.Mode = Dev
-	}
-
-	if envConfig.BiliAppID == "" {
-		fmt.Println("⚠️ 未检测到B站官方授权凭证")
-		fmt.Println("👉 请联系作者 CoffeeSwt 获取授权，或使用官方构建版本")
+		Mode:                getWithDefault(envMap, "mode", Dev),
+		TTS_XApiAppID:       getWithDefault(envMap, "tts_x_api_app_id", ""),
+		TTS_XApiAccessKey:   getWithDefault(envMap, "tts_x_api_access_key", ""),
+		BiliAppID:           getWithDefault(envMap, "bili_app_id", ""),
+		BiliAccessKey:       getWithDefault(envMap, "bili_access_key", ""),
+		BiliSecretKey:       getWithDefault(envMap, "bili_secret_key", ""),
+		LLMMockEnabled:      getWithDefault(envMap, "llm_mock_enabled", false),
+		LLMVolcengineAPIKey: getWithDefault(envMap, "llm_volcengine_api_key", ""),
+		LLMVolcengineModel:  getWithDefault(envMap, "llm_volcengine_model", ""),
 	}
 }
 
