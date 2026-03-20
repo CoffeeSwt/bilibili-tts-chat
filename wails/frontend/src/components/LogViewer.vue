@@ -78,6 +78,16 @@ const getLevelClass = (level) => {
   }
 }
 
+const getSpecialClass = (message) => {
+  if (message.includes('🤖 [LLM回复]')) {
+    return 'ai-reply'
+  }
+  if (message.includes('弹幕')) {
+    return 'danmaku'
+  }
+  return ''
+}
+
 const getStatusText = (status) => {
   switch(status) {
     case 'active': return '运行中'
@@ -114,7 +124,7 @@ const getStatusText = (status) => {
       <div v-if="logs.length === 0" class="empty-state">
         <span>暂无日志，等待连接...</span>
       </div>
-      <div v-for="(log, index) in logs" :key="index" class="log-entry" :class="getLevelClass(log.level)">
+      <div v-for="(log, index) in logs" :key="index" class="log-entry" :class="[getLevelClass(log.level), getSpecialClass(log.message)]">
         <span class="time">{{ log.timestamp.split(' ')[1] }}</span>
         <span class="level-tag">{{ log.level }}</span>
         <span class="message">{{ log.message }}</span>
@@ -312,4 +322,10 @@ const getStatusText = (status) => {
 
 .debug .level-tag { color: #9aa5ce; background: rgba(154, 165, 206, 0.1); }
 .debug .message { color: #9aa5ce; }
+
+/* Special Message Types */
+.danmaku .message { color: #bb9af7; font-weight: 500; }
+.ai-reply { background: rgba(158, 206, 106, 0.05); border-left-color: #9ece6a; }
+.ai-reply .level-tag { color: #9ece6a; background: rgba(158, 206, 106, 0.1); }
+.ai-reply .message { color: #9ece6a; font-weight: bold; }
 </style>

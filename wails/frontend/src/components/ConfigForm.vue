@@ -80,7 +80,7 @@ const save = async () => {
           <input type="range" v-model="form.volume" min="0" max="100" class="slider" />
         </div>
 
-        <!-- <div class="form-group">
+        <div class="form-group">
           <label>助手名称</label>
           <div class="input-wrapper">
             <input v-model="form.assistant_name" placeholder="例如：小助手" type="text" />
@@ -105,7 +105,7 @@ const save = async () => {
             <input type="checkbox" v-model="form.use_llm_replay">
             <span class="slider-round"></span>
           </label>
-        </div> -->
+        </div>
 
         <div v-if="state.error" class="error-msg">
           <span class="error-icon">⚠️</span> {{ state.error }}
@@ -128,8 +128,10 @@ const save = async () => {
   justify-content: center;
   align-items: flex-start;
   width: 100%;
+  height: 100%;
   padding: 20px;
   box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .config-card {
@@ -141,6 +143,7 @@ const save = async () => {
   border: 1px solid var(--border-color);
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
+  margin-bottom: 20px; /* Add margin at bottom for scrolling */
 }
 
 @keyframes slideUp {

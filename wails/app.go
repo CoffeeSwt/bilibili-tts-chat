@@ -54,7 +54,7 @@ func (a *App) startup(ctx context.Context) {
 		keywords := []string{
 			"启动", "成功", "失败", "连接", "断开", // 系统状态
 			"弹幕", "礼物", "关注", "舰长", "SC", "进入", "点赞", // 直播间事件
-			"TTS", "LLM", // AI相关
+			"TTS", "LLM", "🤖", // AI相关
 			"保存", "配置", // 用户操作
 		}
 

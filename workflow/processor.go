@@ -359,6 +359,9 @@ func (wp *WorkflowProcessor) processTaskInternal(taskID int64, texts []string) e
 		return fmt.Errorf("LLM调用失败: %v", err)
 	}
 
+	// 记录 AI 回复内容，使其能够在前端显示
+	logger.Info(fmt.Sprintf("🤖 [LLM回复] %s", response))
+
 	// AI生成完成，立即触发下一个任务检查事件
 	select {
 	case wp.taskCompleteChan <- struct{}{}:

@@ -196,6 +196,7 @@ func UseLLMTask(ctx context.Context, texts []TextWindow) error {
 	// 4. 缓存LLM响应
 	llm.AddCacheEventData(llmResponse)
 
+	logger.Info(fmt.Sprintf("🤖 [LLM回复] %s", llmResponse))
 	logger.Info("PlayEventTasks: LLM响应获取完成", "response_length", len(llmResponse))
 
 	// 检查上下文是否已取消
